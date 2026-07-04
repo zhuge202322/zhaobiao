@@ -77,22 +77,22 @@ const provinces = [
 const carouselItems = [
   {
     title: "发挥政采政策功能，支持中小企业健康发展",
-    img: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=600&q=80",
+    img: "/carousel-1.jpg",
     url: "https://www.teda.gov.cn/contents/21/72948.html"
   },
   {
     title: "招标投标公共服务平台-CA扫码互认共享试点",
-    img: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=600&q=80",
+    img: "/carousel-2.jpg",
     url: "http://www.cebpubservice.com/monitorindustry/monitorplat/2019/07/11252.shtml"
   },
   {
     title: "黄河流域政采协同发展工作研讨会",
-    img: "https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=600&q=80",
+    img: "/carousel-3.jpg",
     url: "http://www.360doc.com/content/23/0825/16/7288840_1093848366.shtml"
   },
   {
     title: "呼市召开2025年政采工作会议",
-    img: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=600&q=80",
+    img: "/carousel-4.jpg",
     url: "http://czj.huhhot.gov.cn/slb/czyw/202501/t20250110_1836060.html"
   }
 ];
