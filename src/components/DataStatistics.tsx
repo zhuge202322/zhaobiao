@@ -1,4 +1,16 @@
-import React from 'react';
+import Link from "next/link";
+import React from "react";
+
+const industryNews = [
+  { id: "industry-3001", text: "法医硅藻自动分析设备的公开招标公告", date: "2026-07-04", new: true },
+  { id: "industry-3002", text: "海洋调查卓越人才计划的公开招标公告", date: "2026-07-04", new: true },
+  { id: "industry-3003", text: "上海市体育彩票管理中心2026年07月政采意向", date: "2026-07-04", new: true },
+  { id: "industry-3004", text: "上海鲁迅纪念馆2026年06月政采意向", date: "2026-07-04" },
+  { id: "industry-3005", text: "上海市公安局2026年08月政采意向", date: "2026-07-04" },
+  { id: "industry-3006", text: "上海市公安局2026年08月警用装备政采意向", date: "2026-07-04" },
+  { id: "industry-3007", text: "上海市公安局2026年08月信息化服务政采意向", date: "2026-07-04" },
+  { id: "industry-3008", text: "上海体育科学研究所（上海市反兴奋剂中心）2026年07月政采意向", date: "2026-07-04" },
+];
 
 const DataStatistics = () => {
   return (
@@ -181,23 +193,19 @@ const DataStatistics = () => {
             </div>
             <div className="p-4 flex-1">
               <ul className="space-y-3 text-sm">
-                {[
-                  { text: "法医硅藻自动分析设备的公开招标公告", date: "2026-07-04", new: true },
-                  { text: "海洋调查卓越人才计划的公开招标公告", date: "2026-07-04", new: true },
-                  { text: "上海市体育彩票管理中心2026年07月政采意向", date: "2026-07-04", new: true },
-                  { text: "上海鲁迅纪念馆2026年06月政采意向", date: "2026-07-04" },
-                  { text: "上海市公安局2026年08月政采意向", date: "2026-07-04" },
-                  { text: "上海市公安局2026年08月政采意向", date: "2026-07-04" },
-                  { text: "上海市公安局2026年08月政采意向", date: "2026-07-04" },
-                  { text: "上海体育科学研究所（上海市反兴奋剂中心）202...", date: "2026-07-04" }
-                ].map((item, idx) => (
-                  <li key={idx} className="flex justify-between items-center group cursor-pointer">
-                    <div className="flex items-center truncate pr-4">
+                {industryNews.map((item) => (
+                  <li key={item.id}>
+                    <Link
+                      href={`/article/${item.id}`}
+                      title={item.text}
+                      className="flex justify-between items-center group"
+                    >
+                      <div className="flex items-center truncate pr-4">
                       <span className="text-blue-300 mr-2">»</span>
                       <span className="text-gray-700 group-hover:text-blue-500 truncate">{item.text}</span>
                       {item.new && <span className="text-[9px] text-blue-500 ml-2 italic">new</span>}
-                    </div>
-                    <span className="text-xs text-gray-400 shrink-0">{item.date}</span>
+                      </div>
+                    </Link>
                   </li>
                 ))}
               </ul>
