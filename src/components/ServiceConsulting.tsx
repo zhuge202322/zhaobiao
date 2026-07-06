@@ -25,7 +25,17 @@ const serviceGroups = [
   },
 ];
 
-const ServiceConsulting = () => {
+type ServiceConsultingProps = {
+  onOpenForm?: () => void;
+};
+
+const ServiceConsulting = ({ onOpenForm }: ServiceConsultingProps) => {
+  const handleMenuClick = () => {
+    if (onOpenForm) {
+      onOpenForm();
+    }
+  };
+
   return (
     <section id="service-consulting" className="bg-white py-12 border-t border-gray-200">
       <div className="w1200">
@@ -51,9 +61,9 @@ const ServiceConsulting = () => {
               <div key={group.title} className="flex justify-center">
                 <div className="grid grid-cols-2 gap-x-8 gap-y-3 text-sm text-gray-600">
                   {group.items.map((item) => (
-                    <a key={item} href="#service-consult-form" className="text-left hover:text-blue-500 transition-colors">
+                    <button key={item} type="button" onClick={handleMenuClick} className="text-left hover:text-blue-500 transition-colors">
                       {item}
-                    </a>
+                    </button>
                   ))}
                 </div>
               </div>
@@ -61,7 +71,7 @@ const ServiceConsulting = () => {
           </div>
         </div>
 
-        <div className="bg-red-600 overflow-hidden relative p-8 md:p-12 text-center rounded">
+        <div className="bg-[#1871D7] overflow-hidden relative px-6 py-8 md:px-10 md:py-10 text-center rounded">
           <div className="absolute inset-0 opacity-40 mix-blend-color-dodge">
             <svg width="100%" height="100%" preserveAspectRatio="none">
               <path d="M0,50 Q100,0 200,50 T400,50 T600,50 T800,50 T1000,50 T1200,50 L1200,100 L0,100 Z" fill="#fbbf24" opacity="0.3" />
@@ -72,52 +82,11 @@ const ServiceConsulting = () => {
               <circle cx="85%" cy="60%" r="7" fill="#fcd34d" />
             </svg>
           </div>
-          <h2 className="text-3xl md:text-5xl font-extrabold text-white tracking-widest relative z-10" style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.3)" }}>
+          <h2 className="text-2xl md:text-[38px] font-extrabold text-white tracking-wider relative z-10 whitespace-nowrap" style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.3)" }}>
             深入推进政府采购改革 助力国家数字化采购平台建设
           </h2>
         </div>
 
-        <div className="mt-8 bg-[#eef5fd] border border-blue-200 rounded-lg p-6 flex flex-col md:flex-row items-center gap-6 shadow-sm">
-          <div className="bg-[#1f7ae1] text-white rounded-lg w-full md:w-36 h-32 flex flex-col items-center justify-center shrink-0 shadow-inner">
-            <span className="text-3xl mb-1">🏁</span>
-            <span className="font-bold text-lg leading-tight text-center tracking-widest">供应商<br />快捷通道</span>
-          </div>
-
-          <div className="flex-1 w-full grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
-            <div className="flex items-center gap-2">
-              <label className="text-sm font-bold text-gray-700 w-[70px] shrink-0 text-right">企业名称:</label>
-              <input type="text" placeholder="您的公司名称" className="flex-1 border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-500 shadow-inner" />
-            </div>
-            <div className="flex items-center gap-2">
-              <label className="text-sm font-bold text-gray-700 w-[70px] shrink-0 text-right">姓名:</label>
-              <input type="text" placeholder="您的姓名" className="flex-1 border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-500 shadow-inner" />
-            </div>
-            <div className="flex items-start gap-2">
-              <label className="text-sm font-bold text-gray-700 w-[70px] shrink-0 text-right pt-2">联系方式:</label>
-              <div className="flex-1">
-                <input type="text" placeholder="您的手机号" className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-500 mb-2 shadow-inner" />
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" className="w-3.5 h-3.5" />
-                  <span className="text-xs text-gray-500">授权并同意 <a href="/SemH5/privacy" target="_blank" rel="noreferrer" className="text-blue-500">《个人信息与隐私保护条款》</a></span>
-                </label>
-              </div>
-            </div>
-            <div className="flex items-start gap-2">
-              <label className="text-sm font-bold text-gray-700 w-[70px] shrink-0 text-right pt-2">验证码:</label>
-              <div className="flex-1 flex h-[38px] shadow-inner rounded">
-                <input type="text" placeholder="验证码" className="w-24 flex-1 border border-r-0 border-gray-300 rounded-l px-3 py-2 text-sm focus:outline-none focus:border-blue-500" />
-                <button type="button" className="bg-[#e0efff] text-blue-500 border border-gray-300 rounded-r px-3 text-xs hover:bg-blue-100 transition-colors shrink-0">获取验证码</button>
-              </div>
-            </div>
-          </div>
-
-          <div className="shrink-0 flex flex-col items-center">
-            <a href="#service-consult-form" className="bg-[#4695fb] hover:bg-blue-600 text-white font-bold text-lg py-3 px-8 rounded shadow-md transition-colors w-full md:w-auto">
-              提交资料进入下一步
-            </a>
-            <div className="text-[11px] text-gray-500 mt-2 font-mono">入驻咨询: 400-999-8839</div>
-          </div>
-        </div>
       </div>
 
       <div id="service-consult-form" className="service-consult-popup">

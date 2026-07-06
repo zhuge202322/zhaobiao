@@ -1,71 +1,105 @@
 "use client";
-import React, { useRef, useEffect } from 'react';
 
-const nationalPlatforms = [
-  { name: "吉林政府采购网", sub: "政采云", iconColor: "text-red-500", icon: "〇" },
-  { name: "上海市政府采购网", sub: "网上超市", iconColor: "text-yellow-600", icon: "△" },
-  { name: "山东政府采购网", sub: "齐鲁云采", iconColor: "text-blue-500", icon: "⚡" },
-  { name: "陕西政府采购网", sub: "网上商城", iconColor: "text-red-600", icon: "政" },
-  { name: "浙江政府采购网", sub: "政采云", iconColor: "text-blue-600", icon: "◉" },
-  { name: "山西政府采购网", sub: "电子卖场", iconColor: "text-blue-400", icon: "■" },
-  { name: "湖南政府采购网", sub: "政采云", iconColor: "text-blue-500", icon: "❈" },
-  { name: "内蒙古政府采购网", sub: "电子卖场", iconColor: "text-blue-400", icon: "✈" },
-  { name: "江西政府采购网", sub: "电子卖场", iconColor: "text-green-500", icon: "◒" },
-  { name: "黑龙江政府采购网", sub: "电子卖场", iconColor: "text-blue-600", icon: "☯" },
-  { name: "广东政府采购网", sub: "电子卖场", iconColor: "text-blue-500", icon: "ⓔ" },
-  { name: "宁夏政府采购网", sub: "网上商城", iconColor: "text-blue-400", icon: "宁" },
-  { name: "湖北政府采购网", sub: "网上商城", iconColor: "text-blue-300", icon: "湖" },
-  { name: "安徽政府采购网", sub: "徽采云", iconColor: "text-green-700", icon: "🌲" },
-  { name: "四川政府采购网", sub: "框架协议电子化采购系统", iconColor: "text-blue-500", icon: "★" },
-  { name: "扶贫832平台", sub: "中介服务超市", iconColor: "text-red-500", icon: "⑧" },
+import React, { useEffect, useRef } from "react";
+
+type PlatformImage = {
+  alt: string;
+  src: string;
+};
+
+const nationalPlatforms: PlatformImage[] = [
+  { alt: "北京市政府采购网", src: "/platforms/national-cards/beijing-1.png" },
+  { alt: "重庆市政府采购平台", src: "/platforms/national-cards/beijing-2.png" },
+  { alt: "辽宁政府采购网", src: "/platforms/national-cards/beijing-3.png" },
+  { alt: "江苏政府采购网", src: "/platforms/national-cards/beijing-4.png" },
+  { alt: "山东政府采购网", src: "/platforms/national-cards/shandong-1.png" },
+  { alt: "浙江政府采购网", src: "/platforms/national-cards/shandong-2.png" },
+  { alt: "湖南政府采购网", src: "/platforms/national-cards/shandong-3.png" },
+  { alt: "江西政府采购网", src: "/platforms/national-cards/shandong-4.png" },
+  { alt: "上海市政府采购网", src: "/platforms/national-cards/shanghai-1.png" },
+  { alt: "山西政府采购网", src: "/platforms/national-cards/shanghai-2.png" },
+  { alt: "广东政府采购网", src: "/platforms/national-cards/shanghai-3.png" },
+  { alt: "宁夏政府采购网", src: "/platforms/national-cards/shanghai-4.png" },
+  { alt: "陕西政府采购网", src: "/platforms/national-cards/shaanxi-1.png" },
+  { alt: "内蒙古政府采购网", src: "/platforms/national-cards/shaanxi-2.png" },
+  { alt: "黑龙江政府采购网", src: "/platforms/national-cards/shaanxi-3.png" },
+  { alt: "湖北政府采购网", src: "/platforms/national-cards/shaanxi-4.png" },
+  { alt: "吉林政府采购网", src: "/platforms/national-cards/jilin-1.png" },
+  { alt: "安徽政府采购网", src: "/platforms/national-cards/jilin-2.png" },
+  { alt: "四川政府采购网", src: "/platforms/national-cards/jilin-3.png" },
+  { alt: "832平台", src: "/platforms/national-cards/jilin-4.png" },
+  { alt: "新疆政府采购网", src: "/platforms/national-cards/xinjiang-1.png" },
+  { alt: "天津政府采购网", src: "/platforms/national-cards/xinjiang-2.png" },
+  { alt: "甘肃政府采购网", src: "/platforms/national-cards/xinjiang-3.png" },
+  { alt: "广西政府采购网", src: "/platforms/national-cards/xinjiang-4.png" },
+  { alt: "福建政府采购网", src: "/platforms/national-cards/fujian-1.png" },
+  { alt: "河北政府采购网", src: "/platforms/national-cards/fujian-2.png" },
+  { alt: "河南政府采购网", src: "/platforms/national-cards/fujian-3.png" },
+  { alt: "海南政府采购网", src: "/platforms/national-cards/fujian-4.png" },
+  { alt: "青海政府采购网", src: "/platforms/national-cards/qinghai-1.png" },
+  { alt: "云南政府采购网", src: "/platforms/national-cards/qinghai-2.png" },
+  { alt: "贵州政府采购网", src: "/platforms/national-cards/qinghai-3.png" },
+  { alt: "西藏政府采购网", src: "/platforms/national-cards/qinghai-4.png" },
 ];
 
-const enterprisePlatforms = [
-  { name: "中铝集团", sub: "中铝集团电子招投标平台", iconColor: "text-blue-700", icon: "A" },
-  { name: "云筑网", sub: "助推建筑行业数字化", iconColor: "text-green-500", icon: "☁" },
-  { name: "中国电力", sub: "中国电力招标", iconColor: "text-blue-600", icon: "E" },
-  { name: "中国南方电网", sub: "CHINA SOUTHERN...", iconColor: "text-blue-800", icon: "☰" },
-  { name: "机电设备招标采购...", sub: "机电设备招标采购平台", iconColor: "text-red-500", icon: "⚙" },
-  { name: "中电招标网", sub: "中电招标网", iconColor: "text-green-600", icon: "⚡" },
-  { name: "中国机电设备招标中心", sub: "中国机电设备招标中心", iconColor: "text-red-600", icon: "T" },
-  { name: "中国石化", sub: "SINOPEC", iconColor: "text-red-500", icon: "S" },
-  { name: "中国南方航空采...", sub: "CHINA SOUTHERN...", iconColor: "text-blue-500", icon: "✈" },
-  { name: "中国安能", sub: "中国安能电子采购平台", iconColor: "text-blue-700", icon: "N" },
-  { name: "中国建设招标网", sub: "中国建设招标网", iconColor: "text-red-600", icon: "C" },
-  { name: "能源一号网", sub: "中国石油电子采购系统", iconColor: "text-yellow-500", icon: "O" },
-  { name: "伟拓招标采购交易...", sub: "伟拓招标采购交易平台", iconColor: "text-red-600", icon: "W" },
-  { name: "中国电建", sub: "中国电建集中采购平台", iconColor: "text-blue-600", icon: "P" },
-  { name: "中国联通", sub: "联通电子招标投标交易...", iconColor: "text-red-500", icon: "U" },
-  { name: "中国政府采购招标网", sub: "中国政府采购招标网", iconColor: "text-blue-500", icon: "G" },
+const enterprisePlatforms: PlatformImage[] = [
+  { alt: "中国电力", src: "/platforms/enterprise/zhongguo-dianli.png" },
+  { alt: "机电设备招标采购平台", src: "/platforms/enterprise/jidian-shebei.png" },
+  { alt: "中国机电设备招标中心", src: "/platforms/enterprise/jidian.png" },
+  { alt: "中国南方电网", src: "/platforms/enterprise/nanfang-dianwang.png" },
+  { alt: "中国建设招标网", src: "/platforms/enterprise/jianshe-zhaobiao.png" },
+  { alt: "中电招标网", src: "/platforms/enterprise/zhongdian-zhaobiao.png" },
+  { alt: "中国石化", src: "/platforms/enterprise/zhonghe.png" },
+  { alt: "中国安能", src: "/platforms/enterprise/zhongguo-anneng.png" },
+  { alt: "能源一号网", src: "/platforms/enterprise/nengyuan-1hao.png" },
+  { alt: "国家电网", src: "/platforms/enterprise/guojia-dianwang.png" },
+  { alt: "中国电建", src: "/platforms/enterprise/zhongguo-dianjian.png" },
+  { alt: "中国联通", src: "/platforms/enterprise/liantong.png" },
+  { alt: "南航采招", src: "/platforms/enterprise/nanhang-caizhao.png" },
+  { alt: "云筑网", src: "/platforms/enterprise/yunzhuwang.png" },
+  { alt: "国药", src: "/platforms/enterprise/guoyao.png" },
+  { alt: "大唐电商", src: "/platforms/enterprise/datang-dianshang.png" },
+  { alt: "华山云商", src: "/platforms/enterprise/huashan-yunshang.png" },
+  { alt: "中央直属机构采购中心", src: "/platforms/enterprise/zhongyang-zhishu.png" },
+  { alt: "政采招标网", src: "/platforms/enterprise/zhengcai-zhaobiao.png" },
+  { alt: "电力采集招标", src: "/platforms/enterprise/dianli-caiji.png" },
+  { alt: "伟拓招标", src: "/platforms/enterprise/weituo-zhaobiao.png" },
+  { alt: "中铝集团", src: "/platforms/enterprise/zhonglv.png" },
+  { alt: "国家信息中心", src: "/platforms/enterprise/guojia-xinxi.png" },
 ];
+
+function PlatformImageCard({ item }: { item: PlatformImage }) {
+  return (
+    <div className="h-[90px] md:h-[96px] lg:h-[76px] overflow-hidden rounded-lg bg-white shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md border border-white hover:border-blue-100 cursor-pointer snap-start">
+      <img src={item.src} alt={item.alt} className="h-full w-full object-cover" />
+    </div>
+  );
+}
 
 export default function ProcurementPlatforms() {
   const nationalRef = useRef<HTMLDivElement>(null);
   const enterpriseRef = useRef<HTMLDivElement>(null);
 
-  const scroll = (ref: React.RefObject<HTMLDivElement | null>, direction: 'left' | 'right') => {
-    if (ref.current) {
-      const scrollAmount = direction === 'left' ? -300 : 300;
-      ref.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-    }
+  const scroll = (ref: React.RefObject<HTMLDivElement | null>, direction: "left" | "right") => {
+    if (!ref.current) return;
+    const scrollAmount = direction === "left" ? -300 : 300;
+    ref.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
   };
 
   useEffect(() => {
     const autoScroll = (ref: React.RefObject<HTMLDivElement | null>) => {
-      if (ref.current) {
-        // If we've reached the end (with a small 10px buffer), scroll back to 0
-        if (ref.current.scrollLeft + ref.current.clientWidth >= ref.current.scrollWidth - 10) {
-          ref.current.scrollTo({ left: 0, behavior: 'smooth' });
-        } else {
-          ref.current.scrollBy({ left: 280, behavior: 'smooth' }); // Scroll by approximately one card width
-        }
+      if (!ref.current) return;
+      if (ref.current.scrollLeft + ref.current.clientWidth >= ref.current.scrollWidth - 10) {
+        ref.current.scrollTo({ left: 0, behavior: "smooth" });
+      } else {
+        ref.current.scrollBy({ left: 280, behavior: "smooth" });
       }
     };
 
     const interval = setInterval(() => {
       autoScroll(nationalRef);
       autoScroll(enterpriseRef);
-    }, 3000); // Scroll every 3 seconds
+    }, 3000);
 
     return () => clearInterval(interval);
   }, []);
@@ -73,12 +107,10 @@ export default function ProcurementPlatforms() {
   return (
     <section className="bg-[#eef5fd] py-8 md:py-12 border-t border-gray-200">
       <div className="w1200 overflow-hidden">
-        
-        {/* National Platforms */}
         <div className="mb-10 relative">
           <div className="flex items-center justify-center mb-6">
-            <button 
-              onClick={() => scroll(nationalRef, 'left')} 
+            <button
+              onClick={() => scroll(nationalRef, "left")}
               className="text-blue-400 hover:text-blue-600 text-2xl px-4 cursor-pointer"
             >
               &lt;
@@ -88,41 +120,29 @@ export default function ProcurementPlatforms() {
               <h2 className="text-xl md:text-2xl font-bold text-slate-800 mx-6">全国政采交易平台</h2>
               <div className="h-px bg-gray-300 flex-1"></div>
             </div>
-            <button 
-              onClick={() => scroll(nationalRef, 'right')}
+            <button
+              onClick={() => scroll(nationalRef, "right")}
               className="text-blue-400 hover:text-blue-600 text-2xl px-4 cursor-pointer"
             >
               &gt;
             </button>
           </div>
 
-          <div className="relative">
-            {/* Scrollable Container */}
-            <div 
-              ref={nationalRef}
-              className="grid grid-rows-2 grid-flow-col auto-cols-[260px] md:auto-cols-[280px] lg:auto-cols-[220px] gap-3 md:gap-4 overflow-x-auto snap-x scroll-smooth pb-4 no-scrollbar"
-              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-            >
-              {nationalPlatforms.map((item, idx) => (
-                <div key={idx} className="bg-white rounded-lg p-3 md:p-4 flex items-center gap-3 shadow-sm hover:shadow-md transition-shadow border border-white hover:border-blue-100 cursor-pointer snap-start">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xl shrink-0 bg-gray-50 ${item.iconColor}`}>
-                    {item.icon}
-                  </div>
-                  <div className="min-w-0">
-                    <h3 className="text-sm font-bold text-slate-800 truncate">{item.name}</h3>
-                    <p className="text-[11px] text-gray-500 truncate mt-0.5">{item.sub}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
+          <div
+            ref={nationalRef}
+            className="grid grid-rows-2 grid-flow-col auto-cols-[260px] md:auto-cols-[280px] lg:auto-cols-[220px] gap-3 md:gap-4 overflow-x-auto snap-x scroll-smooth pb-4 no-scrollbar"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          >
+            {nationalPlatforms.map((item) => (
+              <PlatformImageCard key={item.src} item={item} />
+            ))}
           </div>
         </div>
 
-        {/* Enterprise Platforms */}
         <div className="mb-4 relative">
           <div className="flex items-center justify-center mb-6">
-            <button 
-              onClick={() => scroll(enterpriseRef, 'left')} 
+            <button
+              onClick={() => scroll(enterpriseRef, "left")}
               className="text-blue-400 hover:text-blue-600 text-2xl px-4 cursor-pointer"
             >
               &lt;
@@ -132,43 +152,35 @@ export default function ProcurementPlatforms() {
               <h2 className="text-xl md:text-2xl font-bold text-slate-800 mx-6">央国企采购平台</h2>
               <div className="h-px bg-gray-300 flex-1"></div>
             </div>
-            <button 
-              onClick={() => scroll(enterpriseRef, 'right')}
+            <button
+              onClick={() => scroll(enterpriseRef, "right")}
               className="text-blue-400 hover:text-blue-600 text-2xl px-4 cursor-pointer"
             >
               &gt;
             </button>
           </div>
 
-          <div className="relative">
-            {/* Scrollable Container */}
-            <div 
-              ref={enterpriseRef}
-              className="grid grid-rows-2 grid-flow-col auto-cols-[260px] md:auto-cols-[280px] lg:auto-cols-[220px] gap-3 md:gap-4 overflow-x-auto snap-x scroll-smooth pb-4 no-scrollbar"
-              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-            >
-              {enterprisePlatforms.map((item, idx) => (
-                <div key={idx} className="bg-white rounded-lg p-3 md:p-4 flex items-center gap-3 shadow-sm hover:shadow-md transition-shadow border border-white hover:border-blue-100 cursor-pointer snap-start">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xl shrink-0 bg-gray-50 ${item.iconColor} font-bold`}>
-                    {item.icon}
-                  </div>
-                  <div className="min-w-0">
-                    <h3 className="text-sm font-bold text-slate-800 truncate">{item.name}</h3>
-                    <p className="text-[11px] text-gray-500 truncate mt-0.5">{item.sub}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
+          <div
+            ref={enterpriseRef}
+            className="grid grid-rows-2 grid-flow-col auto-cols-[260px] md:auto-cols-[280px] lg:auto-cols-[220px] gap-3 md:gap-4 overflow-x-auto snap-x scroll-smooth pb-4 no-scrollbar"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          >
+            {enterprisePlatforms.map((item) => (
+              <PlatformImageCard key={item.src} item={item} />
+            ))}
           </div>
         </div>
-
       </div>
-      
-      <style dangerouslySetInnerHTML={{__html: `
-        .no-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-      `}} />
+
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+            .no-scrollbar::-webkit-scrollbar {
+              display: none;
+            }
+          `,
+        }}
+      />
     </section>
   );
 }

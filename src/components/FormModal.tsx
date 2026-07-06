@@ -825,8 +825,7 @@ export default function FormModal({ isOpen, onClose, initialPhone = "", detected
                 </div>
                 <h3 className="text-xl font-bold text-gray-800">业务登记提交成功</h3>
                 <p className="text-xs text-gray-500 mt-2 max-w-md">
-                  已为您开通“政府采购网供应商会员账号”，可通过您的注册手机号随时登录并查询跟进审核进程。
-                  服务中心工作人员将在 <strong className="text-blue-600">24小时</strong> 之内对您提交的相关资料进行审核，审核通过后即可开展业务办理。
+                  您的企业资料已提交，正在排队审核。为加快审核进程，稍后会有客服与您联系，请注意接听电话。
                 </p>
               </div>
 

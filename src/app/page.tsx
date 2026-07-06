@@ -1,10 +1,9 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import FormModal from "@/components/FormModal";
 import ProcurementPlatforms from "@/components/ProcurementPlatforms";
-import DataStatistics from "@/components/DataStatistics";
 import ServiceConsulting from "@/components/ServiceConsulting";
 import {
   articlesById,
@@ -91,13 +90,6 @@ export default function Home() {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
   
-  // Geolocation statistics
-  const [stats, setStats] = useState({
-    suppliers: 3177,
-    buyers: 10329,
-    items: 39619
-  });
-
   const resolveArticleId = (title: string, defaultId?: string) => {
     if (defaultId && articlesById[defaultId]) return defaultId;
     const matched = Object.values(articlesById).find((article) => article.title === title);
@@ -164,15 +156,6 @@ export default function Home() {
   const animationFrameId = useRef<number | null>(null);
   const isHovered = useRef(false);
 
-  // Statistics calculation helper
-  function updateStats(prov: string) {
-    const seed = prov.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0);
-    const suppliers = 2000 + (seed % 1500);
-    const buyers = 5000 + (seed % 6000);
-    const items = 15000 + (seed % 30000);
-    setStats({ suppliers, buyers, items });
-  }
-
   // Geolocation and News mount setup
   useEffect(() => {
     // 1. Real IP Geolocation via Next.js API endpoint (leverages Vercel Edge headers)
@@ -186,7 +169,6 @@ export default function Home() {
           }
           if (data.province && provinces.includes(data.province)) {
             setDetectedProvince(data.province);
-            updateStats(data.province);
             return;
           }
         }
@@ -195,7 +177,6 @@ export default function Home() {
       }
       // Fallback
       setDetectedProvince("北京");
-      updateStats("北京");
     };
     geolocate();
 
@@ -233,7 +214,6 @@ export default function Home() {
   const handleProvinceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const prov = e.target.value;
     setDetectedProvince(prov);
-    updateStats(prov);
   };
 
   // Inline Form SMS code sender
@@ -474,33 +454,22 @@ export default function Home() {
             </div>
           </div>
           
-          <div className="hidden md:flex md:items-center gap-4 text-gray-500">
-            <div className="text-gray-400 mr-2">
-              您好，欢迎来到政采信息服务平台 | 数据监测中心已载入 <span className="font-semibold text-gray-600">供应商 {stats.suppliers} 家</span> | <span className="font-semibold text-gray-600">采购单位 {stats.buyers} 家</span>
+          <div className="hidden md:flex md:items-center md:justify-end md:flex-nowrap gap-5 text-gray-500 whitespace-nowrap flex-1 min-w-0">
+            <div className="text-gray-400 shrink-0">
+              您好，欢迎来到政采信息服务平台
             </div>
-            <span className="font-bold text-[#3991F6]">服务热线：{phone400}</span>
+            <span className="font-bold text-[#3991F6] shrink-0">服务热线：{phone400}</span>
             <span className="text-gray-300">|</span>
-            <button onClick={() => triggerRegistration()} className="hover:text-[#3991F6] transition-colors">采购公告</button>
-            <button onClick={() => triggerRegistration()} className="hover:text-[#3991F6] transition-colors">直采大厅</button>
-            <button onClick={() => triggerRegistration()} className="hover:text-[#3991F6] transition-colors">入驻大厅</button>
+            <button onClick={() => triggerRegistration()} className="shrink-0 hover:text-[#3991F6] transition-colors">采购公告</button>
+            <button onClick={() => triggerRegistration()} className="shrink-0 hover:text-[#3991F6] transition-colors">直采大厅</button>
+            <button onClick={() => triggerRegistration()} className="shrink-0 hover:text-[#3991F6] transition-colors">入驻大厅</button>
             
-            {/* Rules Dropdown */}
-            <div className="relative group">
-              <span className="cursor-pointer hover:text-[#3991F6] transition-colors flex_align_center gap-0.5">
-                平台规则
-                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
-              </span>
-              <div className="absolute right-0 top-full mt-1 w-52 bg-white rounded shadow-lg py-1 text-xs text-left hidden group-hover:block border border-gray-200 z-50">
-                <a href="/rules/legal" target="_blank" className="block px-4 py-2 hover:bg-gray-100 hover:text-[#3991F6]">法律声明</a>
-                <a href="/rules/privacy" target="_blank" className="block px-4 py-2 hover:bg-gray-100 hover:text-[#3991F6]">用户服务与隐私保护协议</a>
-                <a href="/rules/qualification" target="_blank" className="block px-4 py-2 hover:bg-gray-100 hover:text-[#3991F6]">供应商提交资质管理办法</a>
-                <a href="/rules/sla" target="_blank" className="block px-4 py-2 hover:bg-gray-100 hover:text-[#3991F6]">服务 SLA 交付标准</a>
-                <a href="/rules/invoice" target="_blank" className="block px-4 py-2 hover:bg-gray-100 hover:text-[#3991F6]">发票开具与退款说明</a>
-              </div>
-            </div>
+            <Link href="/paid-guide" className="shrink-0 hover:text-[#3991F6] transition-colors">
+              付费指导
+            </Link>
             
             <span className="text-gray-300">|</span>
-            <button onClick={() => setShowProgressQuery(true)} className="hover:text-[#3991F6] font-bold flex_align_center gap-1 transition-colors">
+            <button onClick={() => setShowProgressQuery(true)} className="shrink-0 hover:text-[#3991F6] font-bold flex_align_center gap-1 transition-colors">
               登录 / 进度查询
             </button>
           </div>
@@ -876,112 +845,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Inline Quick Registration Form Section */}
-      <div className="w1200 mt20">
-        <div className="semzxy4_header_add flex_center_space_between gap-4 py-4 px-6 bg-[#E0EFFF] border border-[#3991F6] rounded-xl shadow-inner">
-          <div className="flex_column_center_center bg-[#1871D7] text-white p-3 rounded-lg w-[110px] h-[110px] shadow shrink-0">
-            <span className="text-3xl mb-1">通</span>
-            <div className="font-bold f15 leading-tight text-center">
-              供应商<br/>快捷通道
-            </div>
-          </div>
-          
-          <form onSubmit={handleInlineSubmit} className="inline-reg-form flex-1 grid grid-cols-2 gap-x-4 gap-y-2.5 max-w-3xl">
-            {/* Company Name */}
-            <div className="flex_align_center">
-              <span className="semzxy4_popup_c5_name shrink-0">企业名称：</span>
-              <div className="semzxy4_popup_c5_in flex-1">
-                <input 
-                  type="text" 
-                  placeholder="您的公司名称" 
-                  className="semzxy4_popup_c5_input"
-                  value={inlineOrgName}
-                  onChange={e => setInlineOrgName(e.target.value)}
-                />
-              </div>
-            </div>
-
-            {/* Contact Name */}
-            <div className="flex_align_center">
-              <span className="semzxy4_popup_c5_name shrink-0">姓名：</span>
-              <div className="semzxy4_popup_c5_in flex-1">
-                <input 
-                  type="text" 
-                  placeholder="您的姓名" 
-                  className="semzxy4_popup_c5_input"
-                  value={inlineContactName}
-                  onChange={e => setInlineContactName(e.target.value)}
-                />
-              </div>
-            </div>
-
-            {/* Mobile Phone */}
-            <div className="flex_align_center">
-              <span className="semzxy4_popup_c5_name shrink-0">联系方式：</span>
-              <div className="semzxy4_popup_c5_in flex-1">
-                <input 
-                  type="text" 
-                  placeholder="您的手机号" 
-                  className="semzxy4_popup_c5_input"
-                  value={inlineMobile}
-                  onChange={e => setInlineMobile(e.target.value)}
-                />
-              </div>
-            </div>
-
-            {/* SMS Verification Code */}
-            <div className="flex_align_center">
-              <span className="semzxy4_popup_c5_name shrink-0">验证码：</span>
-              <div className="semzxy4_popup_c6 flex-1">
-                <input 
-                  type="text" 
-                  placeholder="验证码" 
-                  className="semzxy4_popup_c5_input"
-                  value={inlineCode}
-                  onChange={e => setInlineCode(e.target.value)}
-                />
-                <button 
-                  type="button"
-                  onClick={handleSendInlineSms}
-                  disabled={inlineTimer > 0 || isSendingInlineSms}
-                  className="semzxy4_popup_c5_yzm_blue text-xs font-semibold text-[#3991F6] hover:bg-blue-100 h-full shrink-0 border-l border-gray-300"
-                >
-                  {inlineTimer > 0 ? `${inlineTimer}s` : "获取验证码"}
-                </button>
-              </div>
-            </div>
-
-            {/* Privacy policy agreement check */}
-            <div className="col-span-2 flex_align_center text-xs text-slate-500 pl-[74px]">
-              <input 
-                type="checkbox" 
-                id="inline_privacy" 
-                className="mr-2"
-                checked={inlineYinsi}
-                onChange={e => setInlineYinsi(e.target.checked)}
-              />
-              <label htmlFor="inline_privacy">
-                授权并同意
-                <a href="/SemH5/privacy" target="_blank" className="privacy-link font-semibold">《个人信息与隐私保护条款》</a>
-              </label>
-            </div>
-          </form>
-
-          <div className="flex_column_center_center shrink-0">
-            <button 
-              onClick={handleInlineSubmit}
-              type="button" 
-              className="semzxy4_popup_c7_btn2_blue w-[180px] h-[44px] font-bold"
-            >
-              提交资料进入下一步
-            </button>
-            <div className="text-[10px] text-gray-500 mt-1 font-semibold text-center">
-              入驻咨询：{phone400}
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Hot Services Grid */}
       <div className="w1200 mt20">
         <div className="semzxy4_fw">
@@ -1063,14 +926,14 @@ export default function Home() {
           <div className="semzxy4_pt_title_line hidden md:block"></div>
         </div>
 
-        <div className="flex_jspace gap-6 w-full items-start">
+        <div className="announcement-directory flex_jspace gap-6 w-full items-stretch">
           
           {/* Left query systems list (16 links) - Collapsible on mobile */}
-          <div className="info-open-el w-full md:w-[280px] shrink-0 select-none bg-white p-4 border border-gray-200 rounded-xl shadow-sm">
-            <div className="text-slate-800 font-bold f15 mb-3 border-b border-gray-100 pb-2">
+          <div className="info-open-el query-system-panel w-full md:w-[280px] shrink-0 select-none bg-white p-4 border border-gray-200 rounded-xl shadow-sm">
+            <div className="query-system-title text-slate-800 font-bold f15 mb-3 border-b border-gray-100 pb-2">
               招采资质与核验查询系统
             </div>
-            <div className="grid grid-cols-1 gap-2.5">
+            <div className="query-system-list grid grid-cols-1 gap-2.5">
               {[
                 { title: "政府采购网登录系统", icon: "网" },
                 { title: "中国物品编码中心", icon: "码" },
@@ -1091,12 +954,12 @@ export default function Home() {
               ].slice(0, isMobile && !showAllQueryLinks ? 6 : undefined).map((link, idx) => (
                 <div key={idx} className="info-open-link-item">
                   <a 
-                    className="info-open-link flex_align_center px-4 hover:bg-blue-50/50 rounded transition-all border border-gray-100 hover:border-blue-400 text-sm py-2 text-gray-600" 
+                    className="info-open-link query-system-link flex_align_center px-4 rounded transition-all border border-gray-100 text-sm py-2 text-gray-600" 
                     href={link.link || "javascript:void(0);"} 
                     target={link.link ? "_blank" : undefined}
                     onClick={() => !link.link && triggerRegistration()}
                   >
-                    <span className="text-lg mr-2.5 shrink-0">{link.icon}</span>
+                    <span className="query-system-icon text-lg mr-2.5 shrink-0">{link.icon}</span>
                     <span className="truncate">{link.title}</span>
                   </a>
                 </div>
@@ -1217,8 +1080,114 @@ export default function Home() {
       </div>
 
       <ProcurementPlatforms />
-      <DataStatistics />
-      <ServiceConsulting />
+
+      {/* Inline Quick Registration Form Section */}
+      <div className="w1200 mt20 mb20">
+        <div className="semzxy4_header_add flex_center_space_between gap-4 py-4 px-6 bg-[#E0EFFF] border border-[#3991F6] rounded-xl shadow-inner">
+          <div className="flex_column_center_center bg-[#1871D7] text-white p-3 rounded-lg w-[110px] h-[110px] shadow shrink-0">
+            <span className="text-3xl mb-1">通</span>
+            <div className="font-bold f15 leading-tight text-center">
+              供应商<br/>快捷通道
+            </div>
+          </div>
+          
+          <form onSubmit={handleInlineSubmit} className="inline-reg-form flex-1 grid grid-cols-2 gap-x-4 gap-y-2.5 max-w-3xl">
+            {/* Company Name */}
+            <div className="flex_align_center">
+              <span className="semzxy4_popup_c5_name shrink-0">企业名称：</span>
+              <div className="semzxy4_popup_c5_in flex-1">
+                <input 
+                  type="text" 
+                  placeholder="您的公司名称" 
+                  className="semzxy4_popup_c5_input"
+                  value={inlineOrgName}
+                  onChange={e => setInlineOrgName(e.target.value)}
+                />
+              </div>
+            </div>
+
+            {/* Contact Name */}
+            <div className="flex_align_center">
+              <span className="semzxy4_popup_c5_name shrink-0">姓名：</span>
+              <div className="semzxy4_popup_c5_in flex-1">
+                <input 
+                  type="text" 
+                  placeholder="您的姓名" 
+                  className="semzxy4_popup_c5_input"
+                  value={inlineContactName}
+                  onChange={e => setInlineContactName(e.target.value)}
+                />
+              </div>
+            </div>
+
+            {/* Mobile Phone */}
+            <div className="flex_align_center">
+              <span className="semzxy4_popup_c5_name shrink-0">联系方式：</span>
+              <div className="semzxy4_popup_c5_in flex-1">
+                <input 
+                  type="text" 
+                  placeholder="您的手机号" 
+                  className="semzxy4_popup_c5_input"
+                  value={inlineMobile}
+                  onChange={e => setInlineMobile(e.target.value)}
+                />
+              </div>
+            </div>
+
+            {/* SMS Verification Code */}
+            <div className="flex_align_center">
+              <span className="semzxy4_popup_c5_name shrink-0">验证码：</span>
+              <div className="semzxy4_popup_c6 flex-1">
+                <input 
+                  type="text" 
+                  placeholder="验证码" 
+                  className="semzxy4_popup_c5_input"
+                  value={inlineCode}
+                  onChange={e => setInlineCode(e.target.value)}
+                />
+                <button 
+                  type="button"
+                  onClick={handleSendInlineSms}
+                  disabled={inlineTimer > 0 || isSendingInlineSms}
+                  className="semzxy4_popup_c5_yzm_blue text-xs font-semibold text-[#3991F6] hover:bg-blue-100 h-full shrink-0 border-l border-gray-300"
+                >
+                  {inlineTimer > 0 ? `${inlineTimer}s` : "获取验证码"}
+                </button>
+              </div>
+            </div>
+
+            {/* Privacy policy agreement check */}
+            <div className="col-span-2 flex_align_center text-xs text-slate-500 pl-[74px]">
+              <input 
+                type="checkbox" 
+                id="inline_privacy" 
+                className="mr-2"
+                checked={inlineYinsi}
+                onChange={e => setInlineYinsi(e.target.checked)}
+              />
+              <label htmlFor="inline_privacy">
+                授权并同意
+                <a href="/SemH5/privacy" target="_blank" className="privacy-link font-semibold">《个人信息与隐私保护条款》</a>
+              </label>
+            </div>
+          </form>
+
+          <div className="flex_column_center_center shrink-0">
+            <button 
+              onClick={handleInlineSubmit}
+              type="button" 
+              className="semzxy4_popup_c7_btn2_blue w-[180px] h-[44px] font-bold"
+            >
+              提交资料进入下一步
+            </button>
+            <div className="text-[10px] text-gray-500 mt-1 font-semibold text-center">
+              入驻咨询：{phone400}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ServiceConsulting onOpenForm={() => triggerRegistration()} />
 
       {/* Corporate profile section */}
       <section className="py-12 bg-white border-t border-gray-200">
@@ -1271,9 +1240,9 @@ export default function Home() {
             left: `${floatPos.x}px`, 
             top: `${floatPos.y}px`,
           }}
-          className="float-window flex flex-col items-center justify-between border-2 border-blue-500 shadow-xl cursor-pointer hover:border-amber-500"
+          className="float-window flex flex-col border-2 border-blue-500 shadow-xl cursor-pointer hover:border-amber-500"
         >
-          <div className="w-full flex justify-end">
+          <div className="w-full flex justify-end mb-1">
             <button 
               onClick={handleCloseFloat}
               className="text-gray-400 hover:text-gray-700 font-bold text-sm bg-gray-100/50 hover:bg-gray-100 rounded-full w-5 h-5 flex items-center justify-center"
@@ -1281,16 +1250,20 @@ export default function Home() {
               ×
             </button>
           </div>
-          <div className="text-center flex-1 py-1">
-            <span className="text-xl block">电话</span>
-            <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wide block mt-1">政采咨询热线</span>
-            <span className="text-xs font-bold text-gray-800 font-mono block mt-0.5">{phone400}</span>
+          <div className="float-window-content flex-1 text-left">
+            <p className="text-[13px] leading-6 text-slate-700">
+              促进企业发展，深化政采制度改革，优化政采流程，突出政采公正、公平、公开、透明，现全国已展开优质供应商入驻政采平台，开通线上政采电子卖场，开办网上超市等相关登记报名工作。
+            </p>
+            <div className="mt-3 rounded bg-blue-50 px-3 py-2 text-center">
+              <div className="text-[12px] font-bold text-blue-700">全国政采入驻咨询热线</div>
+              <div className="mt-0.5 font-mono text-[18px] font-extrabold text-slate-900">{phone400}</div>
+            </div>
           </div>
           <button 
             onClick={(e) => { e.stopPropagation(); triggerRegistration(); }}
-            className="w-full py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded text-[10px] font-bold"
+            className="mt-3 w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm font-bold"
           >
-            立即在线登记
+            立即登记报名
           </button>
         </div>
       )}

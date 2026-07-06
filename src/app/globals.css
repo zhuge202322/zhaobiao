@@ -316,11 +316,11 @@ html, body {
   position: fixed;
   background: white;
   border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.16);
+  padding: 12px;
   z-index: 10000;
-  width: 150px;
+  width: 320px;
   cursor: move;
 }
 
@@ -678,6 +678,77 @@ html, body {
   background: #E0EFFF;
   padding: 0 4px;
   border-radius: 2px;
+}
+
+/* Bidding announcement directory */
+.announcement-directory {
+  align-items: stretch;
+}
+
+.query-system-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  background:
+    linear-gradient(180deg, rgba(57, 145, 246, 0.05), rgba(255, 255, 255, 0) 180px),
+    #ffffff;
+}
+
+.query-system-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  border-radius: 12px 0 0 12px;
+  background: linear-gradient(180deg, #3991F6, #12b981);
+  opacity: 0.9;
+}
+
+.query-system-title {
+  position: relative;
+  padding-left: 12px;
+  color: #0f2f5f;
+}
+
+.query-system-list {
+  flex: 1;
+}
+
+.query-system-link {
+  position: relative;
+  min-height: 46px;
+  background: rgba(248, 250, 252, 0.86);
+  box-shadow: 0 1px 0 rgba(15, 23, 42, 0.02);
+}
+
+.query-system-link:hover {
+  color: #1871D7;
+  border-color: rgba(57, 145, 246, 0.45);
+  background: linear-gradient(90deg, rgba(224, 239, 255, 0.95), rgba(255, 255, 255, 0.95));
+  transform: translateX(3px);
+  box-shadow: 0 8px 18px rgba(24, 113, 215, 0.08);
+}
+
+.query-system-icon {
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  color: #1871D7;
+  background: #E0EFFF;
+  font-weight: 700;
+}
+
+@media (min-width: 768px) {
+  .query-system-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 10px;
+  }
 }
 
 /* Hot Services Section */
@@ -1144,42 +1215,53 @@ html, body {
     padding: 12px !important;
   }
 
-  /* Fixed round floating telephone widget on mobile */
+  /* Floating notice widget on mobile */
   .float-window {
     position: fixed !important;
-    bottom: 20px !important;
-    right: 20px !important;
-    left: auto !important;
+    bottom: 14px !important;
+    left: 14px !important;
+    right: 14px !important;
     top: auto !important;
-    width: 50px !important;
-    height: 50px !important;
-    border-radius: 50% !important;
-    background: #3991F6 !important;
-    border: 2px solid #FFFFFF !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
+    width: auto !important;
+    max-width: none !important;
+    height: auto !important;
+    max-height: 42vh !important;
+    overflow: hidden !important;
+    border-radius: 14px !important;
+    background: #FFFFFF !important;
+    border: 1px solid rgba(57, 145, 246, 0.35) !important;
+    box-shadow: 0 10px 26px rgba(15, 23, 42, 0.22) !important;
     display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    padding: 0 !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    padding: 10px 12px 12px !important;
     z-index: 999;
   }
-  .float-window div:first-child,
-  .float-window button {
-    display: none !important;
+
+  .float-window-content p {
+    font-size: 12px !important;
+    line-height: 1.65 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden !important;
+    text-align: left !important;
   }
-  .float-window .text-center {
-    padding: 0 !important;
-    margin: 0 !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
+
+  .float-window-content > div {
+    margin-top: 8px !important;
+    padding: 7px 10px !important;
   }
-  .float-window .text-center span:first-child {
-    font-size: 22px !important;
+
+  .float-window-content .font-mono {
+    font-size: 16px !important;
   }
-  .float-window .text-center span:nth-child(2),
-  .float-window .text-center span:nth-child(3) {
-    display: none !important;
+
+  .float-window > button {
+    margin-top: 8px !important;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+    font-size: 13px !important;
   }
 
   /* Form Modal step indicator spacing */
@@ -1245,4 +1327,3 @@ html, body {
     gap: 12px !important;
   }
 }
-
