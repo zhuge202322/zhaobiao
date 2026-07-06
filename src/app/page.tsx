@@ -1079,7 +1079,7 @@ export default function Home() {
         </div>
       </div>
 
-      <ProcurementPlatforms />
+      <ProcurementPlatforms onOpenForm={() => triggerRegistration()} />
 
       {/* Inline Quick Registration Form Section */}
       <div className="w1200 mt20 mb20">

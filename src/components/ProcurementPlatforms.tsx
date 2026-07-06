@@ -7,6 +7,10 @@ type PlatformImage = {
   src: string;
 };
 
+type ProcurementPlatformsProps = {
+  onOpenForm?: () => void;
+};
+
 const nationalPlatforms: PlatformImage[] = [
   { alt: "北京市政府采购网", src: "/platforms/national-cards/beijing-1.png" },
   { alt: "重庆市政府采购平台", src: "/platforms/national-cards/beijing-2.png" },
@@ -68,15 +72,20 @@ const enterprisePlatforms: PlatformImage[] = [
   { alt: "国家信息中心", src: "/platforms/enterprise/guojia-xinxi.png" },
 ];
 
-function PlatformImageCard({ item }: { item: PlatformImage }) {
+function PlatformImageCard({ item, onOpenForm }: { item: PlatformImage; onOpenForm?: () => void }) {
   return (
-    <div className="h-[90px] md:h-[96px] lg:h-[76px] overflow-hidden rounded-lg bg-white shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md border border-white hover:border-blue-100 cursor-pointer snap-start">
+    <button
+      type="button"
+      onClick={onOpenForm}
+      className="h-[90px] md:h-[96px] lg:h-[76px] overflow-hidden rounded-lg bg-white shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md border border-white hover:border-blue-100 cursor-pointer snap-start"
+      aria-label={`${item.alt}登记咨询`}
+    >
       <img src={item.src} alt={item.alt} className="h-full w-full object-cover" />
-    </div>
+    </button>
   );
 }
 
-export default function ProcurementPlatforms() {
+export default function ProcurementPlatforms({ onOpenForm }: ProcurementPlatformsProps) {
   const nationalRef = useRef<HTMLDivElement>(null);
   const enterpriseRef = useRef<HTMLDivElement>(null);
 
@@ -134,7 +143,7 @@ export default function ProcurementPlatforms() {
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
             {nationalPlatforms.map((item) => (
-              <PlatformImageCard key={item.src} item={item} />
+              <PlatformImageCard key={item.src} item={item} onOpenForm={onOpenForm} />
             ))}
           </div>
         </div>
@@ -166,7 +175,7 @@ export default function ProcurementPlatforms() {
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
             {enterprisePlatforms.map((item) => (
-              <PlatformImageCard key={item.src} item={item} />
+              <PlatformImageCard key={item.src} item={item} onOpenForm={onOpenForm} />
             ))}
           </div>
         </div>
