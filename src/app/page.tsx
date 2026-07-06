@@ -5,6 +5,7 @@ import Link from "next/link";
 import FormModal from "@/components/FormModal";
 import ProcurementPlatforms from "@/components/ProcurementPlatforms";
 import ServiceConsulting from "@/components/ServiceConsulting";
+import { getStorageItem, parseStorageJson, setStorageItem } from "@/lib/browserStorage";
 import {
   articlesById,
   defaultCggglist as readableCggglist,
@@ -21,6 +22,17 @@ interface NewsItem {
 }
 
 type NewsTabId = "cggglist" | "xjlist" | "jjlist" | "ddlist";
+
+type MemberRecord = Record<string, {
+  companyName?: string;
+  contactName?: string;
+  phone?: string;
+  code?: string;
+  email?: string;
+  province?: string;
+  step?: number;
+  updatedAt?: string;
+}>;
 
 const provinces = [
   "北京", "天津", "上海", "重庆", "河北", "山西", "辽宁", "吉林", "黑龙江",
@@ -182,16 +194,16 @@ export default function Home() {
 
     // 2. Load custom 400 hotline and news from localStorage
     window.setTimeout(() => {
-      const savedPhone = localStorage.getItem("zcy_400_phone");
+      const savedPhone = getStorageItem("zcy_400_phone");
       if (savedPhone) {
         setPhone400(savedPhone);
       }
 
-      const savedZtbsj = localStorage.getItem("zcy_news_ztbsj");
-      const savedZqcg = localStorage.getItem("zcy_news_zqcg");
+      const savedZtbsj = getStorageItem("zcy_news_ztbsj");
+      const savedZqcg = getStorageItem("zcy_news_zqcg");
 
-      if (savedZtbsj) setZtbsjList(JSON.parse(savedZtbsj));
-      if (savedZqcg) setZqcgList(JSON.parse(savedZqcg));
+      setZtbsjList(parseStorageJson<NewsItem[]>(savedZtbsj, []));
+      setZqcgList(parseStorageJson<NewsItem[]>(savedZqcg, []));
     }, 0);
   }, []);
 
@@ -242,8 +254,8 @@ export default function Home() {
     if (!inlineYinsi) return alert("请先同意个人信息与隐私保护条款");
 
     // Write progress directly to Step 2
-    const savedMembers = localStorage.getItem("zcy_members") || "{}";
-    const members = JSON.parse(savedMembers);
+    const savedMembers = getStorageItem("zcy_members");
+    const members = parseStorageJson<MemberRecord>(savedMembers, {});
     members[inlineMobile] = {
       companyName: inlineOrgName,
       contactName: inlineContactName,
@@ -254,8 +266,8 @@ export default function Home() {
       step: 2,
       updatedAt: new Date().toISOString(),
     };
-    localStorage.setItem("zcy_members", JSON.stringify(members));
-    localStorage.setItem("zcy_active_user", inlineMobile);
+    setStorageItem("zcy_members", JSON.stringify(members));
+    setStorageItem("zcy_active_user", inlineMobile);
 
     alert("资料登记成功，已为您开启第二步：资质资料提交。");
     
@@ -279,9 +291,9 @@ export default function Home() {
       return;
     }
     
-    const savedMembers = localStorage.getItem("zcy_members");
+    const savedMembers = getStorageItem("zcy_members");
     if (savedMembers) {
-      const members = JSON.parse(savedMembers);
+      const members = parseStorageJson<MemberRecord>(savedMembers, {});
       if (members[queryPhone]) {
         setActivePhone(queryPhone);
         setShowProgressQuery(false);
@@ -375,19 +387,19 @@ export default function Home() {
     if (newNewsTab === "cggglist") {
       const updated = [item, ...cggglist];
       setCggglist(updated);
-      localStorage.setItem("zcy_news_cggg", JSON.stringify(updated));
+      setStorageItem("zcy_news_cggg", JSON.stringify(updated));
     } else if (newNewsTab === "xjlist") {
       const updated = [item, ...xjlist];
       setXjlist(updated);
-      localStorage.setItem("zcy_news_xj", JSON.stringify(updated));
+      setStorageItem("zcy_news_xj", JSON.stringify(updated));
     } else if (newNewsTab === "jjlist") {
       const updated = [item, ...jjlist];
       setJjlist(updated);
-      localStorage.setItem("zcy_news_jj", JSON.stringify(updated));
+      setStorageItem("zcy_news_jj", JSON.stringify(updated));
     } else if (newNewsTab === "ddlist") {
       const updated = [item, ...ddlist];
       setDdlist(updated);
-      localStorage.setItem("zcy_news_dd", JSON.stringify(updated));
+      setStorageItem("zcy_news_dd", JSON.stringify(updated));
     }
 
     setNewNewsTitle("");
@@ -399,19 +411,19 @@ export default function Home() {
       if (tab === "cggglist") {
         const u = cggglist.filter(n => n.id !== id);
         setCggglist(u);
-        localStorage.setItem("zcy_news_cggg", JSON.stringify(u));
+        setStorageItem("zcy_news_cggg", JSON.stringify(u));
       } else if (tab === "xjlist") {
         const u = xjlist.filter(n => n.id !== id);
         setXjlist(u);
-        localStorage.setItem("zcy_news_xj", JSON.stringify(u));
+        setStorageItem("zcy_news_xj", JSON.stringify(u));
       } else if (tab === "jjlist") {
         const u = jjlist.filter(n => n.id !== id);
         setJjlist(u);
-        localStorage.setItem("zcy_news_jj", JSON.stringify(u));
+        setStorageItem("zcy_news_jj", JSON.stringify(u));
       } else if (tab === "ddlist") {
         const u = ddlist.filter(n => n.id !== id);
         setDdlist(u);
-        localStorage.setItem("zcy_news_dd", JSON.stringify(u));
+        setStorageItem("zcy_news_dd", JSON.stringify(u));
       }
     }
   };
@@ -1400,9 +1412,9 @@ export default function Home() {
                 <div className="max-h-[150px] overflow-y-auto border border-slate-700 rounded p-2 text-[10px] space-y-1.5">
                   {(() => {
                     if (typeof window !== "undefined") {
-                      const savedMembers = localStorage.getItem("zcy_members");
+                      const savedMembers = getStorageItem("zcy_members");
                       if (savedMembers) {
-                        const members = JSON.parse(savedMembers);
+                        const members = parseStorageJson<MemberRecord>(savedMembers, {});
                         const list = Object.keys(members);
                         if (list.length > 0) {
                           return list.map(phone => (

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { getStorageItem, parseStorageJson, setStorageItem } from "@/lib/browserStorage";
 
 interface FormModalProps {
   isOpen: boolean;
@@ -24,6 +25,27 @@ interface Step2Data {
   idCardFront: string | null;
   idCardBack: string | null;
 }
+
+type MemberRecord = Record<string, {
+  companyName?: string;
+  contactName?: string;
+  phone?: string;
+  code?: string;
+  email?: string;
+  province?: string;
+  businessLicense?: string | null;
+  bankPermit?: string | null;
+  idCardFront?: string | null;
+  idCardBack?: string | null;
+  selectedServices?: string[];
+  step?: number;
+  updatedAt?: string;
+  invoice?: {
+    title?: string;
+    taxId?: string;
+    email?: string;
+  } | null;
+}>;
 
 const provinces = [
   "北京", "天津", "上海", "重庆", "河北", "山西", "辽宁", "吉林", "黑龙江",
@@ -98,7 +120,7 @@ export default function FormModal({ isOpen, onClose, initialPhone = "", detected
 
   // Load custom 400 phone
   useEffect(() => {
-    const savedPhone = localStorage.getItem("zcy_400_phone");
+    const savedPhone = getStorageItem("zcy_400_phone");
     if (savedPhone) {
       setPhone400(savedPhone);
     }
@@ -109,9 +131,9 @@ export default function FormModal({ isOpen, onClose, initialPhone = "", detected
     if (initialPhone) {
       setStep1(prev => ({ ...prev, phone: initialPhone }));
       // Attempt to load existing user progress
-      const savedMembers = localStorage.getItem("zcy_members");
+      const savedMembers = getStorageItem("zcy_members");
       if (savedMembers) {
-        const members = JSON.parse(savedMembers);
+        const members = parseStorageJson<MemberRecord>(savedMembers, {});
         const member = members[initialPhone];
         if (member) {
           setStep1({
@@ -188,7 +210,16 @@ export default function FormModal({ isOpen, onClose, initialPhone = "", detected
 
   // Copy to clipboard helper
   const handleCopy = (text: string, label: string) => {
+    if (!navigator.clipboard?.writeText) {
+      setCopyNotice(`已成功复制${label}`);
+      setTimeout(() => setCopyNotice(""), 2000);
+      return;
+    }
+
     navigator.clipboard.writeText(text).then(() => {
+      setCopyNotice(`已成功复制${label}`);
+      setTimeout(() => setCopyNotice(""), 2000);
+    }).catch(() => {
       setCopyNotice(`已成功复制${label}`);
       setTimeout(() => setCopyNotice(""), 2000);
     });
@@ -196,8 +227,8 @@ export default function FormModal({ isOpen, onClose, initialPhone = "", detected
 
   // Save Progress in localStorage
   const saveProgress = (nextStep: number) => {
-    const savedMembers = localStorage.getItem("zcy_members") || "{}";
-    const members = JSON.parse(savedMembers);
+    const savedMembers = getStorageItem("zcy_members");
+    const members = parseStorageJson<MemberRecord>(savedMembers, {});
     
     members[step1.phone] = {
       ...step1,
@@ -212,8 +243,8 @@ export default function FormModal({ isOpen, onClose, initialPhone = "", detected
       } : (members[step1.phone]?.invoice || null)
     };
     
-    localStorage.setItem("zcy_members", JSON.stringify(members));
-    localStorage.setItem("zcy_active_user", step1.phone);
+    setStorageItem("zcy_members", JSON.stringify(members));
+    setStorageItem("zcy_active_user", step1.phone);
   };
 
   // Step 1 Submit
@@ -361,15 +392,15 @@ export default function FormModal({ isOpen, onClose, initialPhone = "", detected
     if (!invoiceEmail.trim()) return alert("请输入接收邮箱");
     
     // Save invoice data
-    const savedMembers = localStorage.getItem("zcy_members") || "{}";
-    const members = JSON.parse(savedMembers);
+    const savedMembers = getStorageItem("zcy_members");
+    const members = parseStorageJson<MemberRecord>(savedMembers, {});
     if (members[step1.phone]) {
       members[step1.phone].invoice = {
         title: invoiceTitle,
         taxId,
         email: invoiceEmail,
       };
-      localStorage.setItem("zcy_members", JSON.stringify(members));
+      setStorageItem("zcy_members", JSON.stringify(members));
     }
     
     setInvoiceSubmitted(true);
