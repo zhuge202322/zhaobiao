@@ -52,11 +52,7 @@ const openCards: OpenCard[] = [
   { id: "infoopenlist1zb", title: "招投标商机", keywords: "", tabs: ["采购公告", "结果通知", "通知公告", "其它公告"] },
   { id: "infoopenlist2zb", title: "政企采购电子卖场", keywords: "局,市,街道,企业,电子卖场", tabs: ["采购公告", "结果通知", "变更通知", "其它公告"] },
   { id: "infoopenlist3zb", title: "央国企采购", keywords: "中央,央企,企业,国企,国家", tabs: ["采购公告", "结果公告", "其它公告"] },
-  { id: "infoopenlist4zb", title: "税务采购", keywords: "税务,税,税务采购,工商", tabs: ["采购公告", "结果公告", "其它公告"] },
-  { id: "infoopenlist5zb", title: "银行采购", keywords: "银行,保险,信用社,证券,金融", tabs: ["采购公告", "结果公告", "其它公告"] },
   { id: "infoopenlist6zb", title: "军队采购", keywords: "军,部队,地方,国防,后勤,炊事,营房", tabs: ["采购公告", "结果公告", "其它公告"] },
-  { id: "infoopenlist7zb", title: "铁路采购", keywords: "铁路,轨道,工务,机车", tabs: ["采购公告", "结果公告", "其它公告"] },
-  { id: "infoopenlist8zb", title: "电网采购", keywords: "电网,电力,国网,供电", tabs: ["采购公告", "结果公告", "其它公告"] },
 ];
 
 type HotServiceIconType =
@@ -234,11 +230,7 @@ export default function Home() {
     infoopenlist1zb: 0,
     infoopenlist2zb: 0,
     infoopenlist3zb: 0,
-    infoopenlist4zb: 0,
-    infoopenlist5zb: 0,
     infoopenlist6zb: 0,
-    infoopenlist7zb: 0,
-    infoopenlist8zb: 0,
   });
 
   // Inline Form States (Middle form)

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { getStorageItem, parseStorageJson, setStorageItem } from "@/lib/browserStorage";
 
 interface FormModalProps {
@@ -17,6 +17,7 @@ interface Step1Data {
   code: string;
   email: string;
   province: string;
+  platformName: string;
 }
 
 interface Step2Data {
@@ -33,6 +34,7 @@ type MemberRecord = Record<string, {
   code?: string;
   email?: string;
   province?: string;
+  platformName?: string;
   businessLicense?: string | null;
   bankPermit?: string | null;
   idCardFront?: string | null;
@@ -60,6 +62,42 @@ const services = [
   { id: "shop", name: "开通政采店铺及产品上架", price: 3800 },
   { id: "operate", name: "店铺托管运营", price: 8800 }
 ];
+
+const customerRegions = [
+  "北京", "天津", "上海", "重庆", "河北", "河南", "山东", "山西", "陕西", "浙江",
+  "江苏", "安徽", "福建", "广东", "广西", "四川", "云南", "贵州", "湖北", "湖南",
+  "辽宁", "吉林", "黑龙江", "江西", "海南", "甘肃", "青海", "宁夏", "新疆", "内蒙古"
+];
+
+const customerSurnames = [
+  "张", "王", "李", "赵", "刘", "陈", "杨", "黄", "周", "吴",
+  "徐", "孙", "胡", "朱", "高", "林", "何", "郭", "马", "罗"
+];
+
+type PaidCustomer = {
+  region: string;
+  name: string;
+  phone: string;
+  minutes: number;
+};
+
+const createPaidCustomers = (): PaidCustomer[] => {
+  return Array.from({ length: 50 }, (_, index) => {
+    const region = customerRegions[index % customerRegions.length];
+    const surname = customerSurnames[(index * 7) % customerSurnames.length];
+    const role = index % 3 === 0 ? "经理" : index % 3 === 1 ? "先生" : "女士";
+    const prefix = ["139", "138", "137", "136", "135", "188", "189", "177", "170", "150"][index % 10];
+    const middle = String((6400 + index * 173) % 10000).padStart(4, "0");
+    const minutes = ((index * 7 + 11) % 59) + 1;
+
+    return {
+      region,
+      name: `${surname}${role}`,
+      phone: `${prefix}****${middle}`,
+      minutes,
+    };
+  }).sort((a, b) => a.minutes - b.minutes);
+};
 
 export default function FormModal({ isOpen, onClose, initialPhone = "", detectedProvince = "北京" }: FormModalProps) {
   const [currentStep, setCurrentStep] = useState(1);
@@ -89,6 +127,7 @@ export default function FormModal({ isOpen, onClose, initialPhone = "", detected
     code: "",
     email: "",
     province: detectedProvince,
+    platformName: "",
   });
 
   // SMS Verification mock state
@@ -107,6 +146,7 @@ export default function FormModal({ isOpen, onClose, initialPhone = "", detected
   // Step 3 States
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [isPaid, setIsPaid] = useState(false);
+  const paidCustomers = useMemo(() => createPaidCustomers(), []);
   
   // Invoice Request States
   const [showInvoiceForm, setShowInvoiceForm] = useState(false);
@@ -147,6 +187,7 @@ export default function FormModal({ isOpen, onClose, initialPhone = "", detected
             code: "1234", // mock code bypass
             email: member.email || "",
             province: member.province || detectedProvince,
+            platformName: member.platformName || "",
           });
           setStep2({
             businessLicense: member.businessLicense || null,
@@ -592,6 +633,19 @@ export default function FormModal({ isOpen, onClose, initialPhone = "", detected
                 </div>
               </div>
 
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">入驻平台</label>
+                  <input
+                    type="text"
+                    placeholder="请输入想要入驻的平台名称"
+                    value={step1.platformName}
+                    onChange={e => setStep1({...step1, platformName: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                  />
+                </div>
+              </div>
+
               <div className="pt-2 flex flex-col items-center gap-2">
                 <span className="text-xs text-gray-500">政采入驻咨询电话：{phone400}</span>
                 <button
@@ -813,6 +867,74 @@ export default function FormModal({ isOpen, onClose, initialPhone = "", detected
 
           {/* STEP 4: 支付确认页面 */}
           {currentStep === 4 && (
+            <div className="payment-confirm-panel py-3">
+              <div className="payment-confirm-main">
+                <div className="payment-qr-side">
+                  <div className="payment-amount-bar">
+                    应付金额：<strong>{calculatedTotal || 1000}元</strong>
+                  </div>
+                  <div className="payment-qr-wrap">
+                    <img
+                      src="/qrcode-payment.png"
+                      alt="收款二维码"
+                      className="payment-qr-img"
+                    />
+                  </div>
+                  <div className="payment-method-text">支付宝支付</div>
+                </div>
+
+                <div className="payment-customer-side">
+                  <div className="payment-customer-title">已支付入驻预付款商家</div>
+                  <div className="payment-customer-scroll">
+                    <div className="payment-customer-list">
+                      {[...paidCustomers, ...paidCustomers].map((customer, index) => (
+                        <div className="payment-customer-row" key={`${customer.phone}-${index}`}>
+                          <span>{customer.region}/{customer.name}</span>
+                          <span>{customer.phone}</span>
+                          <span>{customer.minutes}分钟前</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="payment-action-row">
+                <button
+                  onClick={() => {
+                    if (confirm("确定要返回上一步重新选择业务吗？")) {
+                      setCurrentStep(3);
+                    }
+                  }}
+                  className="payment-back-btn"
+                >
+                  先不付款，上一步
+                </button>
+                <button
+                  onClick={() => {
+                    saveProgress(5);
+                    setCurrentStep(5);
+                  }}
+                  className="payment-paid-btn"
+                >
+                  我已支付，下一步
+                </button>
+              </div>
+
+              <div className="payment-footer-note">
+                <div>
+                  政采入驻咨询电话：
+                  <a href={`tel:${phone400.replace(/-/g, "")}`}>{phone400}</a>
+                </div>
+                <label>
+                  <input type="checkbox" defaultChecked />
+                  我已阅读并同意《电子卖场入驻资料审查提交服务条款》
+                </label>
+              </div>
+            </div>
+          )}
+
+          {false && currentStep === 4 && (
             <div className="space-y-4 py-4">
               {/* 订单信息卡片 */}
               <div className="bg-white border border-gray-200 rounded-lg p-4 space-y-2">
