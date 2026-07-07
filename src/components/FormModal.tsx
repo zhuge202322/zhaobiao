@@ -81,6 +81,17 @@ type PaidCustomer = {
   minutes: number;
 };
 
+type AlipayOrderState = {
+  loading: boolean;
+  checking: boolean;
+  configMissing: boolean;
+  error: string;
+  outTradeNo: string;
+  qrCodeImage: string;
+  paid: boolean;
+  statusText: string;
+};
+
 const createPaidCustomers = (): PaidCustomer[] => {
   return Array.from({ length: 50 }, (_, index) => {
     const region = customerRegions[index % customerRegions.length];
@@ -147,6 +158,16 @@ export default function FormModal({ isOpen, onClose, initialPhone = "", detected
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [isPaid, setIsPaid] = useState(false);
   const paidCustomers = useMemo(() => createPaidCustomers(), []);
+  const [alipayOrder, setAlipayOrder] = useState<AlipayOrderState>({
+    loading: false,
+    checking: false,
+    configMissing: false,
+    error: "",
+    outTradeNo: "",
+    qrCodeImage: "",
+    paid: false,
+    statusText: "",
+  });
   
   // Invoice Request States
   const [showInvoiceForm, setShowInvoiceForm] = useState(false);
@@ -161,6 +182,7 @@ export default function FormModal({ isOpen, onClose, initialPhone = "", detected
   const bankPermitInputRef = useRef<HTMLInputElement>(null);
   const idCardFrontInputRef = useRef<HTMLInputElement>(null);
   const idCardBackInputRef = useRef<HTMLInputElement>(null);
+  const paymentAdvanceTimerRef = useRef<number | null>(null);
 
   // Load custom 400 phone
   useEffect(() => {
@@ -233,6 +255,126 @@ export default function FormModal({ isOpen, onClose, initialPhone = "", detected
     }
   }, [smsTimer]);
 
+  const calculatedTotal = selectedServices.reduce((sum, id) => {
+    const s = services.find(item => item.id === id);
+    return sum + (s ? s.price : 0);
+  }, 0);
+
+  const paymentAmount = calculatedTotal || 1000;
+
+  useEffect(() => {
+    if (currentStep !== 4 || !isOpen) return;
+
+    let cancelled = false;
+
+    const createAlipayOrder = async () => {
+      setAlipayOrder(prev => ({
+        ...prev,
+        loading: true,
+        checking: false,
+        error: "",
+        configMissing: false,
+        paid: false,
+        statusText: "",
+      }));
+
+      try {
+        const response = await fetch("/api/alipay/create", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            amount: paymentAmount,
+            orderNumber,
+            companyName: step1.companyName,
+            subject: "政采平台入驻服务费",
+          }),
+        });
+
+        const result = await response.json();
+        if (cancelled) return;
+
+        if (!result.ok) {
+          setAlipayOrder(prev => ({
+            ...prev,
+            loading: false,
+            checking: false,
+            configMissing: Boolean(result.configMissing),
+            error: result.message || "支付宝支付二维码生成失败",
+            statusText: "",
+          }));
+          return;
+        }
+
+        setAlipayOrder({
+          loading: false,
+          checking: false,
+          configMissing: false,
+          error: "",
+          outTradeNo: result.outTradeNo || "",
+          qrCodeImage: result.qrCodeImage || "",
+          paid: false,
+          statusText: "请使用支付宝扫码支付，支付成功后页面会自动进入下一步。",
+        });
+      } catch (error) {
+        if (cancelled) return;
+        setAlipayOrder(prev => ({
+          ...prev,
+          loading: false,
+          checking: false,
+          error: error instanceof Error ? error.message : "支付宝支付二维码生成失败",
+          statusText: "",
+        }));
+      }
+    };
+
+    createAlipayOrder();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [currentStep, isOpen, orderNumber, paymentAmount, step1.companyName]);
+
+  useEffect(() => {
+    if (
+      currentStep !== 4 ||
+      !isOpen ||
+      !alipayOrder.outTradeNo ||
+      alipayOrder.paid ||
+      alipayOrder.configMissing
+    ) {
+      return;
+    }
+
+    const firstCheckTimer = window.setTimeout(() => {
+      void checkAlipayPayment({ silent: true });
+    }, 1500);
+
+    const pollTimer = window.setInterval(() => {
+      void checkAlipayPayment({ silent: true });
+    }, 3000);
+
+    return () => {
+      window.clearTimeout(firstCheckTimer);
+      window.clearInterval(pollTimer);
+    };
+  }, [
+    currentStep,
+    isOpen,
+    alipayOrder.outTradeNo,
+    alipayOrder.paid,
+    alipayOrder.configMissing,
+  ]);
+
+  useEffect(() => {
+    return () => {
+      if (paymentAdvanceTimerRef.current) {
+        window.clearTimeout(paymentAdvanceTimerRef.current);
+      }
+    };
+  }, []);
+
   if (!isOpen) return null;
 
   // SMS trigger handler
@@ -290,6 +432,99 @@ export default function FormModal({ isOpen, onClose, initialPhone = "", detected
     
     setStorageItem("zcy_members", JSON.stringify(members));
     setStorageItem("zcy_active_user", step1.phone);
+  };
+
+  const goToPaidSuccessStep = () => {
+    setAlipayOrder(prev => ({
+      ...prev,
+      loading: false,
+      checking: false,
+      paid: true,
+      error: "",
+      statusText: "支付成功，正在进入下一步...",
+    }));
+    setIsPaid(true);
+    saveProgress(5);
+
+    if (paymentAdvanceTimerRef.current) {
+      window.clearTimeout(paymentAdvanceTimerRef.current);
+    }
+
+    paymentAdvanceTimerRef.current = window.setTimeout(() => {
+      setCurrentStep(5);
+      paymentAdvanceTimerRef.current = null;
+    }, 1200);
+  };
+
+  const checkAlipayPayment = async (options: { silent?: boolean } = {}) => {
+    if (!alipayOrder.outTradeNo) {
+      if (!options.silent) {
+        if (alipayOrder.configMissing) {
+          alert("支付宝接口参数还没有配置完整，请先配置后台环境变量后再进行真实支付。");
+        } else {
+          alert(alipayOrder.error || "支付宝订单还没有生成，请稍后再试。");
+        }
+      }
+      return false;
+    }
+
+    setAlipayOrder(prev => ({ ...prev, checking: true, error: "" }));
+
+    try {
+      const response = await fetch("/api/alipay/query", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ outTradeNo: alipayOrder.outTradeNo }),
+      });
+      const result = await response.json();
+
+      if (!result.ok) {
+        const message = result.message || "暂未查询到支付成功记录";
+        setAlipayOrder(prev => ({
+          ...prev,
+          checking: false,
+          paid: false,
+          error: options.silent ? "" : message,
+          statusText: options.silent ? "等待支付中，完成后会自动进入下一步。" : "",
+        }));
+        if (!options.silent) {
+          alert(`${message}，请完成支付后再点击下一步。`);
+        }
+        return false;
+      }
+
+      if (!result.paid) {
+        const statusText = `当前支付状态：${result.tradeStatus || "未支付"}`;
+        setAlipayOrder(prev => ({
+          ...prev,
+          checking: false,
+          paid: false,
+          error: "",
+          statusText,
+        }));
+        if (!options.silent) {
+          alert("暂未查询到支付成功记录，请完成支付后再点击下一步。");
+        }
+        return false;
+      }
+
+      goToPaidSuccessStep();
+      return true;
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "支付宝支付状态查询失败";
+      setAlipayOrder(prev => ({
+        ...prev,
+        checking: false,
+        error: options.silent ? "" : message,
+        statusText: options.silent ? "正在等待支付宝支付结果..." : "",
+      }));
+      if (!options.silent) {
+        alert(message);
+      }
+      return false;
+    }
   };
 
   // Step 1 Submit
@@ -422,11 +657,6 @@ export default function FormModal({ isOpen, onClose, initialPhone = "", detected
     );
   };
 
-  const calculatedTotal = selectedServices.reduce((sum, id) => {
-    const s = services.find(item => item.id === id);
-    return sum + (s ? s.price : 0);
-  }, 0);
-
   const handleStep3Submit = () => {
     if (selectedServices.length === 0) {
       alert("请至少选择一项需要办理的业务");
@@ -436,6 +666,10 @@ export default function FormModal({ isOpen, onClose, initialPhone = "", detected
     // Move to step 4 (Success / Finalize)
     saveProgress(4);
     setCurrentStep(4);
+  };
+
+  const handleConfirmAlipayPaid = async () => {
+    await checkAlipayPayment({ silent: false });
   };
 
   // Invoice Submit Handler
@@ -873,14 +1107,41 @@ export default function FormModal({ isOpen, onClose, initialPhone = "", detected
                   <div className="payment-amount-bar">
                     应付金额：<strong>{calculatedTotal || 1000}元</strong>
                   </div>
-                  <div className="payment-qr-wrap">
+                  <div className={`payment-qr-wrap ${alipayOrder.paid ? "paid" : ""}`}>
+                    {alipayOrder.paid ? (
+                      <div className="payment-success-check" aria-label="支付成功">
+                        ✓
+                      </div>
+                    ) : (
                     <img
-                      src="/qrcode-payment.png"
+                      src={alipayOrder.qrCodeImage || "/qrcode-payment.png"}
                       alt="收款二维码"
                       className="payment-qr-img"
                     />
+                    )}
                   </div>
                   <div className="payment-method-text">支付宝支付</div>
+                  {alipayOrder.loading && (
+                    <div className="payment-status-text text-blue-600">正在生成支付宝二维码...</div>
+                  )}
+                  {!alipayOrder.loading && alipayOrder.checking && !alipayOrder.paid && (
+                    <div className="payment-status-text text-blue-600">正在查询支付状态...</div>
+                  )}
+                  {!alipayOrder.loading && alipayOrder.paid && (
+                    <div className="payment-status-text payment-success-text">支付成功，正在进入下一步...</div>
+                  )}
+                  {!alipayOrder.loading && !alipayOrder.checking && !alipayOrder.paid && alipayOrder.statusText && (
+                    <div className="payment-status-text text-blue-600">{alipayOrder.statusText}</div>
+                  )}
+                  {!alipayOrder.loading && alipayOrder.configMissing && (
+                    <div className="payment-status-text text-amber-600">支付宝参数未配置，当前显示备用二维码</div>
+                  )}
+                  {!alipayOrder.loading && alipayOrder.error && !alipayOrder.configMissing && !alipayOrder.paid && (
+                    <div className="payment-status-text text-rose-600">{alipayOrder.error}</div>
+                  )}
+                  {!alipayOrder.loading && alipayOrder.outTradeNo && (
+                    <div className="payment-status-text text-gray-500">订单号：{alipayOrder.outTradeNo}</div>
+                  )}
                 </div>
 
                 <div className="payment-customer-side">
@@ -911,13 +1172,17 @@ export default function FormModal({ isOpen, onClose, initialPhone = "", detected
                   先不付款，上一步
                 </button>
                 <button
-                  onClick={() => {
-                    saveProgress(5);
-                    setCurrentStep(5);
-                  }}
+                  onClick={handleConfirmAlipayPaid}
+                  disabled={alipayOrder.loading || alipayOrder.checking || alipayOrder.paid}
                   className="payment-paid-btn"
                 >
-                  我已支付，下一步
+                  {alipayOrder.paid
+                    ? "支付成功"
+                    : alipayOrder.loading
+                      ? "正在生成..."
+                      : alipayOrder.checking
+                        ? "正在查询..."
+                        : "我已支付，下一步"}
                 </button>
               </div>
 
