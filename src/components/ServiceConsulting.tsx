@@ -48,20 +48,20 @@ const ServiceConsulting = ({ onOpenForm }: ServiceConsultingProps) => {
         </div>
 
         <div className="mb-10">
-          <div className="grid grid-cols-2 md:grid-cols-4 bg-gray-100 border-b border-gray-200 mb-4">
+          <div className="service-consult-tabs grid grid-cols-2 md:grid-cols-4 bg-gray-100 border-b border-gray-200 mb-4">
             {serviceGroups.map((group) => (
-              <div key={group.title} className="py-3 px-4 font-bold text-gray-700 text-sm flex items-center justify-center gap-2">
+              <div key={group.title} className="service-consult-tab py-3 px-4 font-bold text-gray-700 text-sm flex items-center justify-center gap-2">
                 {group.title} <span className="text-blue-500 text-lg">{group.icon}</span>
               </div>
             ))}
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-y-6">
+          <div className="service-consult-menu grid grid-cols-2 md:grid-cols-4 gap-y-6">
             {serviceGroups.map((group) => (
-              <div key={group.title} className="flex justify-center">
-                <div className="grid grid-cols-2 gap-x-8 gap-y-3 text-sm text-gray-600">
+              <div key={group.title} className="service-consult-group flex justify-center">
+                <div className="service-consult-items grid grid-cols-2 gap-x-8 gap-y-3 text-sm text-gray-600">
                   {group.items.map((item) => (
-                    <button key={item} type="button" onClick={handleMenuClick} className="text-left hover:text-blue-500 transition-colors">
+                    <button key={item} type="button" onClick={handleMenuClick} className="service-consult-item text-left hover:text-blue-500 transition-colors">
                       {item}
                     </button>
                   ))}

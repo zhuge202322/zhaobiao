@@ -79,8 +79,8 @@ export default async function ArticlePage(props: PageProps<"/article/[id]">) {
           </div>
 
           <div className="hidden text-right md:block">
-            <div className="text-[30px] tracking-[10px] text-[#222]">公平 / 公正 / 公开</div>
-            <div className="mt-1 text-[22px] uppercase tracking-[9px] text-gray-400">Open Fair Just</div>
+            <div className="whitespace-nowrap text-[22px] tracking-[4px] text-[#222]">公平 / 公正 / 公开</div>
+            <div className="mt-1 whitespace-nowrap text-[16px] uppercase tracking-[6px] text-gray-400">Open Fair Just</div>
           </div>
         </div>
       </header>
@@ -125,7 +125,6 @@ export default async function ArticlePage(props: PageProps<"/article/[id]">) {
             </h1>
             <div className="mt-5 flex flex-wrap items-center justify-center gap-x-12 gap-y-2 text-sm text-gray-500">
               <span>来源：{article.source}</span>
-              <span>发布时间：{article.date}</span>
               <span>浏览次数：{article.views}</span>
             </div>
           </div>

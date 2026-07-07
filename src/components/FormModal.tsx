@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { getStorageItem, parseStorageJson, setStorageItem } from "@/lib/browserStorage";
 
 interface FormModalProps {
@@ -117,6 +117,10 @@ export default function FormModal({ isOpen, onClose, initialPhone = "", detected
 
   const [phone400, setPhone400] = useState("400-999-8839");
   const [copyNotice, setCopyNotice] = useState("");
+  const businessLicenseInputRef = useRef<HTMLInputElement>(null);
+  const bankPermitInputRef = useRef<HTMLInputElement>(null);
+  const idCardFrontInputRef = useRef<HTMLInputElement>(null);
+  const idCardBackInputRef = useRef<HTMLInputElement>(null);
 
   // Load custom 400 phone
   useEffect(() => {
@@ -339,17 +343,26 @@ export default function FormModal({ isOpen, onClose, initialPhone = "", detected
     }
   };
 
+  const getFileInputRef = (field: keyof Step2Data) => {
+    if (field === "businessLicense") return businessLicenseInputRef;
+    if (field === "bankPermit") return bankPermitInputRef;
+    if (field === "idCardFront") return idCardFrontInputRef;
+    return idCardBackInputRef;
+  };
+
   const triggerFileInput = (field: keyof Step2Data) => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'image/jpeg,image/jpg,image/png,application/pdf';
-    input.onchange = (e) => {
-      const file = (e.target as HTMLInputElement).files?.[0];
-      if (file) {
-        handleFileUpload(field, file);
-      }
-    };
-    input.click();
+    const input = getFileInputRef(field).current;
+    if (input) {
+      input.value = "";
+      input.click();
+    }
+  };
+
+  const handleFileInputChange = (field: keyof Step2Data, e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.currentTarget.files?.[0];
+    if (file) {
+      handleFileUpload(field, file);
+    }
   };
 
   const handleStep2Submit = () => {
@@ -489,11 +502,11 @@ export default function FormModal({ isOpen, onClose, initialPhone = "", detected
         </div>
 
         {/* Modal content body */}
-        <div className="px-8 pb-8 flex-1 overflow-y-auto max-h-[420px]">
+        <div className="modal-body-scroll px-8 pb-8 flex-1 overflow-y-auto max-h-[420px]">
           
           {/* STEP 1: 申报登记 */}
           {currentStep === 1 && (
-            <form onSubmit={handleStep1Submit} className="space-y-4">
+            <form onSubmit={handleStep1Submit} className="registration-form space-y-3">
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-1">企业名称 <span className="text-red-500">*</span></label>
@@ -579,7 +592,7 @@ export default function FormModal({ isOpen, onClose, initialPhone = "", detected
                 </div>
               </div>
 
-              <div className="pt-4 flex justify-between items-center">
+              <div className="pt-2 flex flex-col items-center gap-2">
                 <span className="text-xs text-gray-500">政采入驻咨询电话：{phone400}</span>
                 <button
                   type="submit"
@@ -613,7 +626,16 @@ export default function FormModal({ isOpen, onClose, initialPhone = "", detected
                       </button>
                     </div>
                   ) : (
-                    <div onClick={() => triggerFileInput("businessLicense")}>
+                    <div onClick={() => triggerFileInput("businessLicense")} className="relative">
+                      <input
+                        ref={businessLicenseInputRef}
+                        type="file"
+                        accept="image/*,application/pdf"
+                        onClick={(e) => { e.stopPropagation(); e.currentTarget.value = ""; }}
+                        onChange={(e) => handleFileInputChange("businessLicense", e)}
+                        className="absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0"
+                        aria-label="上传营业执照"
+                      />
                       <span className="block text-2xl mb-1">📁</span>
                       <span className="block text-xs font-semibold text-gray-700">上传营业执照</span>
                       <span className="block text-xxs text-gray-400 mt-1">支持JPG、PNG、PDF格式，最大10MB</span>
@@ -635,7 +657,16 @@ export default function FormModal({ isOpen, onClose, initialPhone = "", detected
                       </button>
                     </div>
                   ) : (
-                    <div onClick={() => triggerFileInput("bankPermit")}>
+                    <div onClick={() => triggerFileInput("bankPermit")} className="relative">
+                      <input
+                        ref={bankPermitInputRef}
+                        type="file"
+                        accept="image/*,application/pdf"
+                        onClick={(e) => { e.stopPropagation(); e.currentTarget.value = ""; }}
+                        onChange={(e) => handleFileInputChange("bankPermit", e)}
+                        className="absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0"
+                        aria-label="上传开户许可证或基本户信息"
+                      />
                       <span className="block text-2xl mb-1">💳</span>
                       <span className="block text-xs font-semibold text-gray-700">开户许可证/基本户信息</span>
                       <span className="block text-xxs text-gray-400 mt-1">需清晰可见印章，最大10MB</span>
@@ -657,7 +688,16 @@ export default function FormModal({ isOpen, onClose, initialPhone = "", detected
                       </button>
                     </div>
                   ) : (
-                    <div onClick={() => triggerFileInput("idCardFront")}>
+                    <div onClick={() => triggerFileInput("idCardFront")} className="relative">
+                      <input
+                        ref={idCardFrontInputRef}
+                        type="file"
+                        accept="image/*,application/pdf"
+                        onClick={(e) => { e.stopPropagation(); e.currentTarget.value = ""; }}
+                        onChange={(e) => handleFileInputChange("idCardFront", e)}
+                        className="absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0"
+                        aria-label="上传法人身份证正面"
+                      />
                       <span className="block text-2xl mb-1">👤</span>
                       <span className="block text-xs font-semibold text-gray-700">法人身份证正面 (加盖公章)</span>
                       <span className="block text-xxs text-gray-400 mt-1">需加盖公司公章复印件</span>
@@ -679,7 +719,16 @@ export default function FormModal({ isOpen, onClose, initialPhone = "", detected
                       </button>
                     </div>
                   ) : (
-                    <div onClick={() => triggerFileInput("idCardBack")}>
+                    <div onClick={() => triggerFileInput("idCardBack")} className="relative">
+                      <input
+                        ref={idCardBackInputRef}
+                        type="file"
+                        accept="image/*,application/pdf"
+                        onClick={(e) => { e.stopPropagation(); e.currentTarget.value = ""; }}
+                        onChange={(e) => handleFileInputChange("idCardBack", e)}
+                        className="absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0"
+                        aria-label="上传法人身份证反面"
+                      />
                       <span className="block text-2xl mb-1">👤</span>
                       <span className="block text-xs font-semibold text-gray-700">法人身份证反面 (加盖公章)</span>
                       <span className="block text-xxs text-gray-400 mt-1">需加盖公司公章复印件</span>

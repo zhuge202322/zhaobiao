@@ -225,6 +225,62 @@ html, body {
   background: var(--primary);
 }
 
+.registration-form {
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.registration-form > .grid {
+  display: block;
+}
+
+.registration-form > .grid > div {
+  display: grid;
+  grid-template-columns: 128px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.registration-form label {
+  margin: 0;
+  text-align: right;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1f2937;
+}
+
+.registration-form input,
+.registration-form select {
+  min-height: 38px;
+  border-radius: 0;
+  border-color: #7f8793;
+  background: #fff;
+}
+
+.registration-form input:focus,
+.registration-form select:focus {
+  border-color: #3991f6;
+  outline: none;
+  box-shadow: none;
+}
+
+.registration-form > .grid .flex.gap-2 {
+  gap: 0;
+}
+
+.registration-form > .grid .flex.gap-2 input {
+  min-width: 0;
+}
+
+.registration-form > .grid .flex.gap-2 button {
+  min-height: 38px;
+  border-radius: 0;
+  border-color: #7f8793;
+  border-left: 0;
+  background: #eaf4ff;
+}
+
 /* Custom Checkbox Group for Service Picker */
 .service-checkbox-card {
   border: 1.5px solid #e2e8f0;
@@ -315,13 +371,23 @@ html, body {
 .float-window {
   position: fixed;
   background: white;
-  border: 1px solid #ddd;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 2px solid #1d4f86;
   border-radius: 10px;
   box-shadow: 0 10px 28px rgba(15, 23, 42, 0.16);
   padding: 12px;
   z-index: 10000;
   width: 320px;
-  cursor: move;
+  cursor: pointer;
+}
+
+.float-window-left {
+  left: 10px;
+}
+
+.float-window-right {
+  right: 10px;
 }
 
 /* Premium Card hover effects */
@@ -754,76 +820,69 @@ html, body {
 /* Hot Services Section */
 .semzxy4_fw {
   width: 100%;
-  height: 201px;
-  background: #F3F3F3;
-  display: flex;
-  align-items: center;
-  border-radius: 8px;
+  min-height: 210px;
+  background: #3991F6;
+  border-radius: 0;
+  padding: 24px 28px;
+  box-sizing: border-box;
+  box-shadow: 0 10px 24px rgba(57, 145, 246, 0.18);
 }
 
-.semzxy4_fw_left {
-  width: 121px;
-  height: 170px;
-  font-size: 16px;
-  font-weight: 600;
+.hot-service-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-rows: repeat(3, 1fr);
+  gap: 16px 34px;
+  width: 100%;
+  height: 100%;
+}
+
+.hot-service-card {
+  min-width: 0;
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 4px;
   color: #FFFFFF;
-  text-align: center;
-  border-radius: 6px;
-  padding: 20px 10px;
-  box-sizing: border-box;
-  line-height: 1.4;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  text-align: left;
+  transition: transform 0.18s ease, opacity 0.18s ease;
 }
 
-.semzxy4_fw_right {
-  flex: 1;
-  height: 100%;
-  padding: 15px 20px;
-  box-sizing: border-box;
+.hot-service-card:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
 }
 
-.semzxy4_fw_right_list {
-  width: 960px;
-  height: 100%;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-}
-
-.semzxy4_fw_right_list_item {
-  width: 240px;
-  height: 71px;
-  border-right: 1px solid #dddddd;
-  font-size: 16px;
-  font-weight: 600;
-  color: #333333;
-  display: flex;
+.hot-service-icon {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  box-sizing: border-box;
+  color: rgba(255, 255, 255, 0.86);
 }
 
-.semzxy4_fw_right_list_item:last-child {
-  border-right: none;
-}
-
-.semzxy4_fw_right_list_item_line {
+.hot-service-icon svg {
   width: 100%;
-  height: 1px;
-  background-color: #dddddd;
-  margin-top: 8px;
-  margin-bottom: 8px;
+  height: 100%;
+  display: block;
 }
 
-.semzxy4_fw_right_list_item_c {
-  width: 140px;
-  text-align: center;
-  transition: all 0.2s ease;
+.hot-service-name {
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
 }
 
 .semzxy4_fw_right_list_item_c:hover {
   cursor: pointer;
-  transform: scale(1.08);
-  color: #1871D7;
 }
 
 .hotimg_ab {
@@ -1111,6 +1170,9 @@ html, body {
     align-items: stretch !important;
     gap: 12px !important;
     padding: 16px 12px !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
   }
   .inline-reg-form {
     display: flex !important;
@@ -1161,42 +1223,229 @@ html, body {
 
   /* Hot Services Grid */
   .semzxy4_fw {
-    flex-direction: column !important;
     height: auto !important;
-    align-items: stretch !important;
-    padding: 12px !important;
-    gap: 10px !important;
+    min-height: 0 !important;
+    padding: 16px 14px !important;
+    border-radius: 0 !important;
   }
-  .semzxy4_fw_left {
-    width: 100% !important;
-    height: auto !important;
-    padding: 8px !important;
-    border-radius: 4px !important;
-    font-size: 14px !important;
+  .hot-service-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    grid-template-rows: none !important;
+    gap: 14px 8px !important;
   }
-  .semzxy4_fw_right {
-    padding: 0 !important;
-  }
-  .semzxy4_fw_right .hot-services-row {
-    flex-wrap: wrap !important;
-    justify-content: flex-start !important;
+  .hot-service-card {
+    min-height: 42px !important;
     gap: 6px !important;
+    padding: 0 !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    text-align: center !important;
   }
-  .semzxy4_fw_right_list_item {
-    width: calc(50% - 3px) !important;
-    height: 52px !important;
-    border-right: none !important;
-    background: #FFFFFF;
-    border: 1px solid #f1f5f9;
-    border-radius: 6px;
-    padding: 6px !important;
+  .hot-service-icon {
+    width: 28px !important;
+    height: 28px !important;
+    flex-basis: 28px !important;
   }
-  .semzxy4_fw_right_list_item_line {
-    display: none !important;
-  }
-  .semzxy4_fw_right_list_item_c {
+  .hot-service-name {
     width: 100% !important;
-    font-size: 13px !important;
+    font-size: 11px !important;
+    line-height: 1 !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+  }
+
+  #service-consulting {
+    padding-top: 28px !important;
+    padding-bottom: 28px !important;
+  }
+
+  #service-consulting .service-consult-tabs {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    margin-bottom: 10px !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 6px !important;
+    overflow: hidden !important;
+  }
+
+  #service-consulting .service-consult-tab {
+    min-height: 44px !important;
+    padding: 7px 2px !important;
+    gap: 2px !important;
+    font-size: 11px !important;
+    line-height: 1.15 !important;
+    white-space: nowrap !important;
+  }
+
+  #service-consulting .service-consult-tab span {
+    font-size: 12px !important;
+    flex: 0 0 auto !important;
+  }
+
+  #service-consulting .service-consult-menu {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 7px 6px !important;
+  }
+
+  #service-consulting .service-consult-group,
+  #service-consulting .service-consult-items {
+    display: contents !important;
+  }
+
+  #service-consulting .service-consult-item {
+    min-width: 0 !important;
+    height: 34px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 2px !important;
+    border: 1px solid #eef2f7 !important;
+    border-radius: 4px !important;
+    background: #fff !important;
+    font-size: 11px !important;
+    line-height: 1 !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+  }
+
+  .procurement-platforms {
+    padding-top: 24px !important;
+    padding-bottom: 24px !important;
+    overflow: hidden !important;
+  }
+
+  .procurement-platforms .w1200 {
+    width: 100% !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    overflow: hidden !important;
+  }
+
+  .procurement-platforms .mb-10,
+  .procurement-platforms .mb-4 {
+    margin-bottom: 22px !important;
+  }
+
+  .procurement-platforms .flex.items-center.justify-center.mb-6 {
+    margin-bottom: 12px !important;
+  }
+
+  .procurement-platforms h2 {
+    margin-left: 10px !important;
+    margin-right: 10px !important;
+    font-size: 20px !important;
+    white-space: nowrap !important;
+  }
+
+  .procurement-platforms .platform-card-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    grid-template-rows: none !important;
+    grid-auto-flow: row !important;
+    grid-auto-columns: initial !important;
+    gap: 10px !important;
+    overflow-x: visible !important;
+    padding-bottom: 0 !important;
+    scroll-snap-type: none !important;
+  }
+
+  .procurement-platforms .platform-image-card {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 88px !important;
+    transform: none !important;
+  }
+
+  .semzxy4_header_add {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+    padding: 12px !important;
+    margin-top: 12px !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    background: #e0efff !important;
+    border: 1px solid #bfdbfe !important;
+    border-radius: 10px !important;
+  }
+
+  .semzxy4_header_add > .flex_column_center_center:first-child {
+    width: 100% !important;
+    height: 44px !important;
+    min-height: 44px !important;
+    flex-direction: row !important;
+    gap: 8px !important;
+    padding: 8px !important;
+  }
+
+  .semzxy4_header_add > .flex_column_center_center:first-child span {
+    margin: 0 !important;
+    font-size: 20px !important;
+  }
+
+  .semzxy4_header_add > .flex_column_center_center:first-child div {
+    font-size: 14px !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+  }
+
+  .inline-reg-form {
+    width: 100% !important;
+    max-width: none !important;
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+
+  .inline-reg-form > div {
+    display: block !important;
+  }
+
+  .inline-reg-form .semzxy4_popup_c5_name {
+    display: block !important;
+    margin-bottom: 4px !important;
+    font-size: 12px !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+  }
+
+  .inline-reg-form .semzxy4_popup_c5_in,
+  .inline-reg-form .semzxy4_popup_c6 {
+    width: 100% !important;
+    height: 34px !important;
+  }
+
+  .inline-reg-form .semzxy4_popup_c5_input {
+    height: 34px !important;
+    min-height: 34px !important;
+    font-size: 12px !important;
+    border-radius: 4px !important;
+    background: #fff !important;
+  }
+
+  .inline-reg-form .col-span-2 {
+    grid-column: auto !important;
+    padding-left: 0 !important;
+    font-size: 11px !important;
+    align-items: flex-start !important;
+  }
+
+  .semzxy4_header_add > .flex_column_center_center:last-child {
+    width: 100% !important;
+    height: auto !important;
+    padding: 0 !important;
+    display: flex !important;
+    margin-top: 2px !important;
+  }
+
+  .semzxy4_header_add .semzxy4_popup_c7_btn2_blue {
+    width: 100% !important;
+    height: 40px !important;
+  }
+
+  .semzxy4_header_add + * {
+    margin-top: 18px !important;
   }
 
   /* Query Announcement grids */
@@ -1222,6 +1471,7 @@ html, body {
     left: 14px !important;
     right: 14px !important;
     top: auto !important;
+    transform: none !important;
     width: auto !important;
     max-width: none !important;
     height: auto !important;
@@ -1236,6 +1486,10 @@ html, body {
     justify-content: flex-start !important;
     padding: 10px 12px 12px !important;
     z-index: 999;
+  }
+
+  .float-window-right {
+    display: none !important;
   }
 
   .float-window-content p {
@@ -1264,6 +1518,43 @@ html, body {
     font-size: 13px !important;
   }
 
+  .modal-overlay {
+    align-items: flex-start !important;
+    justify-content: center !important;
+    overflow-y: auto !important;
+    padding: calc(env(safe-area-inset-top, 0px) + 12px) 10px 18px !important;
+  }
+
+  .modal-container {
+    width: 100% !important;
+    max-width: none !important;
+    max-height: calc(100dvh - 30px) !important;
+    margin: 0 auto 96px !important;
+    border-radius: 12px !important;
+  }
+
+  .modal-header-trapezoid {
+    width: 100% !important;
+    clip-path: none !important;
+    padding: 12px 44px 12px 16px !important;
+    border-radius: 12px 12px 0 0 !important;
+    font-size: 16px !important;
+    line-height: 1.25 !important;
+  }
+
+  .modal-container > button.absolute {
+    top: 10px !important;
+    right: 10px !important;
+    z-index: 20 !important;
+  }
+
+  .modal-body-scroll {
+    max-height: calc(100dvh - 220px) !important;
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+    padding-bottom: 18px !important;
+  }
+
   /* Form Modal step indicator spacing */
   .step-indicator {
     padding: 15px 10px !important;
@@ -1275,6 +1566,32 @@ html, body {
     width: 28px !important;
     height: 28px !important;
     font-size: 12px !important;
+  }
+  .registration-form {
+    max-width: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+  .registration-form > .grid > div {
+    display: block !important;
+    margin-bottom: 12px !important;
+  }
+  .registration-form label {
+    display: block !important;
+    margin-bottom: 6px !important;
+    text-align: left !important;
+  }
+  .registration-form input,
+  .registration-form select {
+    min-height: 40px !important;
+    border-color: #d1d5db !important;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+  .registration-form input:focus,
+  .registration-form select:focus {
+    border-color: #9ca3af !important;
+    outline: none !important;
+    box-shadow: none !important;
   }
   .modal-container .grid-cols-2,
   .modal-container .grid.grid-cols-2 {

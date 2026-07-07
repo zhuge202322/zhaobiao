@@ -67,7 +67,6 @@ const enterprisePlatforms: PlatformImage[] = [
   { alt: "中央直属机构采购中心", src: "/platforms/enterprise/zhongyang-zhishu.png" },
   { alt: "政采招标网", src: "/platforms/enterprise/zhengcai-zhaobiao.png" },
   { alt: "电力采集招标", src: "/platforms/enterprise/dianli-caiji.png" },
-  { alt: "伟拓招标", src: "/platforms/enterprise/weituo-zhaobiao.png" },
   { alt: "中铝集团", src: "/platforms/enterprise/zhonglv.png" },
   { alt: "国家信息中心", src: "/platforms/enterprise/guojia-xinxi.png" },
 ];
@@ -77,7 +76,7 @@ function PlatformImageCard({ item, onOpenForm }: { item: PlatformImage; onOpenFo
     <button
       type="button"
       onClick={onOpenForm}
-      className="h-[90px] md:h-[96px] lg:h-[76px] overflow-hidden rounded-lg bg-white shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md border border-white hover:border-blue-100 cursor-pointer snap-start"
+      className="platform-image-card h-[90px] md:h-[96px] lg:h-[76px] overflow-hidden rounded-lg bg-white shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md border border-white hover:border-blue-100 cursor-pointer snap-start"
       aria-label={`${item.alt}登记咨询`}
     >
       <img src={item.src} alt={item.alt} className="h-full w-full object-cover" />
@@ -114,7 +113,7 @@ export default function ProcurementPlatforms({ onOpenForm }: ProcurementPlatform
   }, []);
 
   return (
-    <section className="bg-[#eef5fd] py-8 md:py-12 border-t border-gray-200">
+    <section className="procurement-platforms bg-[#eef5fd] py-8 md:py-12 border-t border-gray-200">
       <div className="w1200 overflow-hidden">
         <div className="mb-10 relative">
           <div className="flex items-center justify-center mb-6">
@@ -139,7 +138,7 @@ export default function ProcurementPlatforms({ onOpenForm }: ProcurementPlatform
 
           <div
             ref={nationalRef}
-            className="grid grid-rows-2 grid-flow-col auto-cols-[260px] md:auto-cols-[280px] lg:auto-cols-[220px] gap-3 md:gap-4 overflow-x-auto snap-x scroll-smooth pb-4 no-scrollbar"
+            className="platform-card-grid grid grid-rows-2 grid-flow-col auto-cols-[260px] md:auto-cols-[280px] lg:auto-cols-[220px] gap-3 md:gap-4 overflow-x-auto snap-x scroll-smooth pb-4 no-scrollbar"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
             {nationalPlatforms.map((item) => (
@@ -171,7 +170,7 @@ export default function ProcurementPlatforms({ onOpenForm }: ProcurementPlatform
 
           <div
             ref={enterpriseRef}
-            className="grid grid-rows-2 grid-flow-col auto-cols-[260px] md:auto-cols-[280px] lg:auto-cols-[220px] gap-3 md:gap-4 overflow-x-auto snap-x scroll-smooth pb-4 no-scrollbar"
+            className="platform-card-grid grid grid-rows-2 grid-flow-col auto-cols-[260px] md:auto-cols-[280px] lg:auto-cols-[220px] gap-3 md:gap-4 overflow-x-auto snap-x scroll-smooth pb-4 no-scrollbar"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
             {enterprisePlatforms.map((item) => (

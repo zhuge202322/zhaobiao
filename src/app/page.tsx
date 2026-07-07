@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import FormModal from "@/components/FormModal";
 import ProcurementPlatforms from "@/components/ProcurementPlatforms";
@@ -41,29 +41,6 @@ const provinces = [
   "内蒙古", "广西", "西藏", "宁夏", "新疆", "香港", "澳门"
 ];
 
-const carouselItems = [
-  {
-    title: "发挥政府采购政策功能，支持中小企业健康发展",
-    img: "/carousel-1.jpg",
-    url: "https://www.teda.gov.cn/contents/21/72948.html"
-  },
-  {
-    title: "招标投标公共服务平台 CA 扫码互认共享试点",
-    img: "/carousel-2.jpg",
-    url: "http://www.cebpubservice.com/monitorindustry/monitorplat/2019/07/11252.shtml"
-  },
-  {
-    title: "黄河流域政府采购协同发展工作研讨会",
-    img: "/carousel-3.jpg",
-    url: "http://www.360doc.com/content/23/0825/16/7288840_1093848366.shtml"
-  },
-  {
-    title: "呼和浩特市召开 2025 年政府采购工作会议",
-    img: "/carousel-4.jpg",
-    url: "http://czj.huhhot.gov.cn/slb/czyw/202501/t20250110_1836060.html"
-  }
-];
-
 interface OpenCard {
   id: string;
   title: string;
@@ -81,6 +58,135 @@ const openCards: OpenCard[] = [
   { id: "infoopenlist7zb", title: "铁路采购", keywords: "铁路,轨道,工务,机车", tabs: ["采购公告", "结果公告", "其它公告"] },
   { id: "infoopenlist8zb", title: "电网采购", keywords: "电网,电力,国网,供电", tabs: ["采购公告", "结果公告", "其它公告"] },
 ];
+
+type HotServiceIconType =
+  | "entry"
+  | "lock"
+  | "form"
+  | "shop"
+  | "tools"
+  | "shield"
+  | "settle"
+  | "orbit"
+  | "download"
+  | "edit"
+  | "book"
+  | "upload";
+
+const hotServiceItems: Array<{ name: string; icon: HotServiceIconType }> = [
+  { name: "供应商入驻", icon: "entry" },
+  { name: "CA锁办理", icon: "lock" },
+  { name: "电子增值办理", icon: "form" },
+  { name: "搭建政采店铺", icon: "shop" },
+  { name: "店铺商品上架", icon: "tools" },
+  { name: "政采竞价服务", icon: "shield" },
+  { name: "政采业务结算", icon: "settle" },
+  { name: "投标报名服务", icon: "orbit" },
+  { name: "招标文件下载", icon: "download" },
+  { name: "投标指导服务", icon: "edit" },
+  { name: "标书制作服务", icon: "book" },
+  { name: "上传标书服务", icon: "upload" },
+];
+
+function HotServiceIcon({ type }: { type: HotServiceIconType }) {
+  const common = {
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 1.7,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+  };
+
+  switch (type) {
+    case "entry":
+      return (
+        <svg viewBox="0 0 48 48" aria-hidden="true">
+          <rect x="8" y="8" width="32" height="32" rx="2" {...common} />
+          <path d="M16 16h8v8h-8zM28 16h4M28 22h4M16 28h4M16 34h4M28 28h4M28 34h4" {...common} />
+        </svg>
+      );
+    case "lock":
+      return (
+        <svg viewBox="0 0 48 48" aria-hidden="true">
+          <rect x="8" y="16" width="32" height="22" rx="2" {...common} />
+          <path d="M17 16v-2a7 7 0 0 1 14 0v2M18 27h12M22 23l-4 4 4 4M30 23l4 4-4 4" {...common} />
+        </svg>
+      );
+    case "form":
+      return (
+        <svg viewBox="0 0 48 48" aria-hidden="true">
+          <rect x="12" y="9" width="24" height="30" rx="2" {...common} />
+          <path d="M18 15h12M18 21h12M18 27h7M32 31l5-5 3 3-5 5-5 1z" {...common} />
+        </svg>
+      );
+    case "shop":
+      return (
+        <svg viewBox="0 0 48 48" aria-hidden="true">
+          <path d="M9 38h30M12 38V21h24v17M10 21l4-11h20l4 11M17 38V27h14v11" {...common} />
+          <path d="M14 21v5M24 21v5M34 21v5" {...common} />
+        </svg>
+      );
+    case "tools":
+      return (
+        <svg viewBox="0 0 48 48" aria-hidden="true">
+          <path d="M11 37l12-12M8 18l7-7 6 6-7 7zM27 13l8 8M31 9l8 8M25 29l10 10M35 29l-10 10" {...common} />
+        </svg>
+      );
+    case "shield":
+      return (
+        <svg viewBox="0 0 48 48" aria-hidden="true">
+          <path d="M24 8l16 6v9c0 10-6.5 16-16 19C14.5 39 8 33 8 23v-9z" {...common} />
+          <path d="M18 25l4 4 8-10" {...common} />
+        </svg>
+      );
+    case "settle":
+      return (
+        <svg viewBox="0 0 48 48" aria-hidden="true">
+          <path d="M13 39V27M24 39V18M35 39V24M10 39h28" {...common} />
+          <circle cx="24" cy="14" r="5" {...common} />
+          <path d="M24 11v6M21 14h6" {...common} />
+        </svg>
+      );
+    case "orbit":
+      return (
+        <svg viewBox="0 0 48 48" aria-hidden="true">
+          <ellipse cx="24" cy="24" rx="17" ry="8" transform="rotate(35 24 24)" {...common} />
+          <ellipse cx="24" cy="24" rx="17" ry="8" transform="rotate(-35 24 24)" {...common} />
+          <circle cx="24" cy="24" r="3" {...common} />
+        </svg>
+      );
+    case "download":
+      return (
+        <svg viewBox="0 0 48 48" aria-hidden="true">
+          <path d="M24 8v21M16 21l8 8 8-8M11 39h26M14 39v-8h20v8" {...common} />
+        </svg>
+      );
+    case "edit":
+      return (
+        <svg viewBox="0 0 48 48" aria-hidden="true">
+          <rect x="10" y="11" width="28" height="28" rx="2" {...common} />
+          <path d="M17 31l3-8 12-12 5 5-12 12zM28 15l5 5" {...common} />
+        </svg>
+      );
+    case "book":
+      return (
+        <svg viewBox="0 0 48 48" aria-hidden="true">
+          <path d="M14 8h16l4 5v27H14zM30 8v7h6M19 21h10M19 27h10M19 33h7" {...common} />
+        </svg>
+      );
+    case "upload":
+      return (
+        <svg viewBox="0 0 48 48" aria-hidden="true">
+          <path d="M24 40V19M16 27l8-8 8 8M12 14a10 10 0 0 1 18-4 8 8 0 0 1 2 16h-2" {...common} />
+          <path d="M14 36h20" {...common} />
+        </svg>
+      );
+  }
+}
+
+const floatNoticeText = "促进企业发展，深化政采制度改革，优化政采流程，突出政采公正、公平、公开、透明，现全国已展开优质供应商入驻政采平台，开通线上政采电子卖场，开办网上超市等相关登记报名工作。";
+const floatHotlineLabel = "全国政采入驻咨询热线";
+const floatButtonLabel = "立即登记报名";
 
 export default function Home() {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -116,14 +222,6 @@ export default function Home() {
   // Navigation hover indexes
   const [hoveredNavIndex, setHoveredNavIndex] = useState<number | null>(null);
 
-  // Main News Tabs State
-  const [activeNewsTab, setActiveNewsTab] = useState<NewsTabId>("cggglist");
-  const newsTabLabels: Record<NewsTabId, string> = {
-    cggglist: "政采头条",
-    xjlist: "供应商动态",
-    jjlist: "政策法规",
-    ddlist: "新闻通知",
-  };
   const [cggglist, setCggglist] = useState<NewsItem[]>(readableCggglist);
   const [xjlist, setXjlist] = useState<NewsItem[]>(readableXjlist);
   const [jjlist, setJjlist] = useState<NewsItem[]>(readableJjlist);
@@ -143,9 +241,6 @@ export default function Home() {
     infoopenlist8zb: 0,
   });
 
-  // Carousel Slide State
-  const [carouselIndex, setCarouselIndex] = useState(0);
-
   // Inline Form States (Middle form)
   const [inlineOrgName, setInlineOrgName] = useState("");
   const [inlineContactName, setInlineContactName] = useState("");
@@ -162,11 +257,6 @@ export default function Home() {
   const [newNewsTab, setNewNewsTab] = useState<NewsTabId>("cggglist");
   
   const [showFloatWindow, setShowFloatWindow] = useState(true);
-  const floatRef = useRef<HTMLDivElement>(null);
-  const [floatPos, setFloatPos] = useState({ x: 20, y: 180 });
-  const floatDir = useRef({ dx: 1.5, dy: 1.5 });
-  const animationFrameId = useRef<number | null>(null);
-  const isHovered = useRef(false);
 
   // Geolocation and News mount setup
   useEffect(() => {
@@ -205,14 +295,6 @@ export default function Home() {
       setZtbsjList(parseStorageJson<NewsItem[]>(savedZtbsj, []));
       setZqcgList(parseStorageJson<NewsItem[]>(savedZqcg, []));
     }, 0);
-  }, []);
-
-  // Carousel Autoplay
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCarouselIndex(prev => (prev + 1) % carouselItems.length);
-    }, 5000);
-    return () => clearInterval(timer);
   }, []);
 
   // SMS Timer
@@ -313,57 +395,6 @@ export default function Home() {
     setActivePhone(phoneVal);
     setIsFormOpen(true);
   };
-
-  // Floating Bouncing Widget logic
-  useEffect(() => {
-    const animateFloat = () => {
-      if (isHovered.current || !floatRef.current) {
-        animationFrameId.current = requestAnimationFrame(animateFloat);
-        return;
-      }
-
-      const rect = floatRef.current.getBoundingClientRect();
-      const elWidth = rect.width || 160;
-      const elHeight = rect.height || 150;
-      const viewWidth = window.innerWidth;
-      const viewHeight = window.innerHeight;
-
-      setFloatPos(prev => {
-        let newX = prev.x + floatDir.current.dx;
-        let newY = prev.y + floatDir.current.dy;
-
-        if (newX <= 0) {
-          newX = 0;
-          floatDir.current.dx = Math.abs(floatDir.current.dx);
-        } else if (newX + elWidth >= viewWidth) {
-          newX = viewWidth - elWidth;
-          floatDir.current.dx = -Math.abs(floatDir.current.dx);
-        }
-
-        if (newY <= 0) {
-          newY = 0;
-          floatDir.current.dy = Math.abs(floatDir.current.dy);
-        } else if (newY + elHeight >= viewHeight) {
-          newY = viewHeight - elHeight;
-          floatDir.current.dy = -Math.abs(floatDir.current.dy);
-        }
-
-        return { x: newX, y: newY };
-      });
-
-      animationFrameId.current = requestAnimationFrame(animateFloat);
-    };
-
-    if (showFloatWindow) {
-      animationFrameId.current = requestAnimationFrame(animateFloat);
-    }
-
-    return () => {
-      if (animationFrameId.current) {
-        cancelAnimationFrame(animationFrameId.current);
-      }
-    };
-  }, [showFloatWindow]);
 
   const handleCloseFloat = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -704,110 +735,24 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Two Column News & Carousel Section */}
-      <div className="w1200 mt10">
-        <div className="semzxy4_c1 gap-4">
-          
-          {/* Left Carousel Image Slider */}
-          <div className="semzxy4_c1_left relative group bg-slate-900 border border-gray-200">
-            <div className="w-full h-full relative overflow-hidden">
-              {carouselItems.map((item, idx) => (
-                <div 
-                  key={idx}
-                  onClick={() => triggerRegistration()}
-                  className={`absolute top-0 left-0 w-full h-full transition-opacity duration-1000 cursor-pointer ${
-                    idx === carouselIndex ? "opacity-100 z-10" : "opacity-0 z-0"
-                  }`}
-                >
-                  <img 
-                    src={item.img} 
-                    alt={item.title} 
-                    className="semzxy4_c1_img w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <div className="semzxy4_c1_ab z-20">
-                    <div className="semzxy4_c1_text text-center text-white" title={item.title}>
-                      {item.title}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            
-            {/* Carousel navigation dots */}
-            <div className="absolute right-4 top-4 z-30 flex gap-1.5 bg-black/45 px-2 py-1 rounded-full">
-              {carouselItems.map((_, idx) => (
-                <div 
-                  key={idx} 
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setCarouselIndex(idx);
-                  }}
-                  className={`w-2 h-2 rounded-full cursor-pointer transition-all ${
-                    idx === carouselIndex ? "bg-white scale-125" : "bg-gray-400"
-                  }`}
-                />
-              ))}
-            </div>
+      {/* Hot Services Grid */}
+      <div className="w1200 mt20">
+        <div className="semzxy4_fw">
+          <div className="hot-service-grid">
+            {hotServiceItems.map((srv) => (
+              <button
+                key={srv.name}
+                type="button"
+                onClick={() => triggerRegistration()}
+                className="hot-service-card"
+              >
+                <span className="hot-service-icon">
+                  <HotServiceIcon type={srv.icon} />
+                </span>
+                <span className="hot-service-name">{srv.name}</span>
+              </button>
+            ))}
           </div>
-
-          {/* Right tabbed news container */}
-          <div className="semzxy4_c1_right">
-            <div className="semzxy4_c1_right_top bg-E0EFFF">
-              {([
-                { id: "cggglist", label: "政采头条" },
-                { id: "xjlist", label: "供应商动态" },
-                { id: "jjlist", label: "政策法规" },
-                { id: "ddlist", label: "新闻通知" }
-              ] satisfies Array<{ id: NewsTabId; label: string }>).map(tab => (
-                <div 
-                  key={tab.id}
-                  onClick={() => setActiveNewsTab(tab.id)}
-                  className={`semzxy4_c1_right_top_item ${
-                    activeNewsTab === tab.id 
-                      ? "fc-fff bg-3991F6" 
-                      : "fc-333 hover:bg-[#d0e5ff] hover:text-[#3991F6]"
-                  }`}
-                >
-                  {newsTabLabels[tab.id as keyof typeof newsTabLabels]}
-                </div>
-              ))}
-            </div>
-
-            <div className="semzxy4_c1_right_footer">
-              <div className="semzxy4_c1_right_footer_list">
-                
-                {/* Active List Rendering */}
-                {(() => {
-                  const currentList = 
-                    activeNewsTab === "cggglist" ? cggglist :
-                    activeNewsTab === "xjlist" ? xjlist :
-                    activeNewsTab === "jjlist" ? jjlist : ddlist;
-
-                  return currentList.slice(0, 10).map((news, idx) => (
-                    <div key={news.id || idx} className="semzxy4_c1_list_item mb10">
-                      <div className="flex_align_center truncate">
-                        <span className="text-[#3991F6] mr-2">▶</span>
-                        <div className="semzxy4_c1_list_item_title ml5">
-                          <Link
-                            href={`/article/${encodeURIComponent(resolveArticleId(news.title, news.id))}`}
-                            title={news.title}
-                            className="text-[#333333] hover:text-[#3991F6] transition-colors"
-                          >
-                            {news.title}
-                          </Link>
-                        </div>
-                        {news.newBadge && (
-                          <span className="semzxy4_c1_list_item_new_blue text-[9px]">new</span>
-                        )}
-                      </div>
-                    </div>
-                  ));
-                })()}
-
-              </div>
-            </div>
-          </div>
-
         </div>
       </div>
 
@@ -857,77 +802,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Hot Services Grid */}
-      <div className="w1200 mt20">
-        <div className="semzxy4_fw">
-          <div className="semzxy4_fw_left bg-1871D7 flex_center_center text-center">
-            <div>
-              <div>政采平台</div>
-              <div>供应商</div>
-              <div className="mt-1 bg-yellow-400 text-slate-900 rounded text-[11px] px-1 font-bold">服务中心</div>
-            </div>
-          </div>
-          
-          <div className="semzxy4_fw_right relative overflow-hidden">
-            {/* Standard double layout grid container */}
-            <div className="flex flex-col h-full justify-between">
-              {/* Row 1 */}
-              <div className="hot-services-row flex justify-between items-center w-full">
-                {[
-                  { name: "供应商入驻", step: 1, hot: true },
-                  { name: "CA锁办理", step: 2, hot: true },
-                  { name: "供应商账户重置", step: 1, hot: true },
-                  { name: "搭建政采店铺", step: 3, hot: false }
-                ].map((srv, sidx) => (
-                  <div 
-                    key={sidx} 
-                    onClick={() => triggerRegistration()} 
-                    className="semzxy4_fw_right_list_item relative cursor-pointer"
-                  >
-                    <div className="semzxy4_fw_right_list_item_c flex_center_center relative">
-                      <span>{srv.name}</span>
-                      {srv.hot && (
-                        <div className="absolute right-[-10px] top-[-15px]">
-                          <span className="bg-rose-500 text-white font-mono text-[8px] px-1 py-0.5 rounded-full scale-75 animate-bounce">hot</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-              
-              {/* Splitting divider line */}
-              <div className="semzxy4_fw_right_list_item_line"></div>
-              
-              {/* Row 2 */}
-              <div className="hot-services-row flex justify-between items-center w-full">
-                {[
-                  { name: "店铺商品上架", step: 3, hot: true },
-                  { name: "政采竞价服务", step: 3, hot: true },
-                  { name: "政采业务结算", step: 3, hot: false },
-                  { name: "投标报名服务", step: 1, hot: true }
-                ].map((srv, sidx) => (
-                  <div 
-                    key={sidx} 
-                    onClick={() => triggerRegistration()} 
-                    className="semzxy4_fw_right_list_item relative cursor-pointer"
-                  >
-                    <div className="semzxy4_fw_right_list_item_c flex_center_center relative">
-                      <span>{srv.name}</span>
-                      {srv.hot && (
-                        <div className="absolute right-[-10px] top-[-15px]">
-                          <span className="bg-rose-500 text-white font-mono text-[8px] px-1 py-0.5 rounded-full scale-75 animate-bounce">hot</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Main Bidding Announcement Directory Layout */}
       <div className="mt20 w1200 mb20">
         <div className="flex_center_center mt-8 mb-4">
@@ -956,10 +830,8 @@ export default function Home() {
                 { title: "ISO认证体系查询系统", icon: "证", link: "http://cx.cnca.cn/CertECloud/index/index/page" },
                 { title: "质检报告登录查询系统", icon: "检", link: "http://cx.cnca.cn/CertECloud/index/index/page" },
                 { title: "裁判文书网查询", icon: "法", link: "https://wenshu.court.gov.cn/" },
-                { title: "节能产品查询系统", icon: "节", link: "http://cx.cnca.cn/CertECloud/index/index/page" },
                 { title: "电子卖场查询登录系统", icon: "卖" },
                 { title: "国铁商城登录系统", icon: "铁" },
-                { title: "京东查询登录系统", icon: "京" },
                 { title: "国家电网查询登录系统", icon: "电" },
                 { title: "慧采平台查询登录系统", icon: "采" },
                 { title: "军队采购查询登录系统", icon: "军" }
@@ -1201,83 +1073,41 @@ export default function Home() {
 
       <ServiceConsulting onOpenForm={() => triggerRegistration()} />
 
-      {/* Corporate profile section */}
-      <section className="py-12 bg-white border-t border-gray-200">
-        <div className="w1200 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-          <div>
-            <span className="text-xs bg-blue-100 text-blue-800 px-2.5 py-1 rounded font-bold uppercase tracking-wider mb-2 inline-block">
-              关于我们
-            </span>
-            <h3 className="text-xl font-bold text-slate-800 mb-4">政采通政采服务云平台简介</h3>
-            <p className="text-xs text-slate-600 leading-relaxed mb-4">
-              政采通政采服务云平台专注于“互联网+政府采购”的数字化服务，提供政采、企采、央采平台的信息咨询、供应商入驻、CA办理、店铺搭建、商品上架等一站式服务。
-            </p>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              团队熟悉招投标业务、电子卖场规则和采购流程，能够协助供应商规范准备资料、提升响应效率，并为企业参与采购活动提供持续支持。
-            </p>
-          </div>
-          <div className="bg-slate-50 border border-gray-200 rounded-2xl p-6 space-y-4">
-            <h4 className="text-sm font-bold text-slate-800">服务咨询核心细节</h4>
-            <div className="space-y-3 text-xs text-slate-600">
-              <div className="flex gap-2">
-                <span className="text-blue-600 font-bold">✓</span>
-                <div><strong>进度记录：</strong>提交后系统会缓存申报数据，可通过手机号找回并继续后续资料提交。</div>
-              </div>
-              <div className="flex gap-2">
-                <span className="text-blue-600 font-bold">✓</span>
-                <div><strong>渠道范围：</strong>服务覆盖全国多省市电子卖场和政府采购平台，按不同区域政策要求提供资料预审。</div>
-              </div>
-              <div className="flex gap-2">
-                <span className="text-blue-600 font-bold">✓</span>
-                <div><strong>售后保障：</strong>专业团队按合同标准推进服务交付，并协助完成发票、结算和后续维护。</div>
-              </div>
-            </div>
-            <div className="bg-blue-600 text-white rounded-xl p-4 text-center">
-              <div className="text-[10px] uppercase font-bold text-blue-200">政采入驻服务热线</div>
-               <div className="text-xl font-bold font-mono mt-1">{phone400}</div>
-              <div className="text-[9px] text-blue-100 mt-1">工作时间：周一至周日 09:00 - 22:00</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Floating Hotline widget */}
       {showFloatWindow && (
-        <div 
-          ref={floatRef}
-          onMouseEnter={() => { isHovered.current = true; }}
-          onMouseLeave={() => { isHovered.current = false; }}
-          onClick={() => triggerRegistration()}
-          style={{ 
-            left: `${floatPos.x}px`, 
-            top: `${floatPos.y}px`,
-          }}
-          className="float-window flex flex-col border-2 border-blue-500 shadow-xl cursor-pointer hover:border-amber-500"
-        >
-          <div className="w-full flex justify-end mb-1">
-            <button 
-              onClick={handleCloseFloat}
-              className="text-gray-400 hover:text-gray-700 font-bold text-sm bg-gray-100/50 hover:bg-gray-100 rounded-full w-5 h-5 flex items-center justify-center"
+        <>
+          {(["left", "right"] as const).map((side) => (
+            <div
+              key={side}
+              onClick={() => triggerRegistration()}
+              className={`float-window float-window-${side} flex flex-col cursor-pointer`}
             >
-              ×
-            </button>
-          </div>
-          <div className="float-window-content flex-1 text-left">
-            <p className="text-[13px] leading-6 text-slate-700">
-              促进企业发展，深化政采制度改革，优化政采流程，突出政采公正、公平、公开、透明，现全国已展开优质供应商入驻政采平台，开通线上政采电子卖场，开办网上超市等相关登记报名工作。
-            </p>
-            <div className="mt-3 rounded bg-blue-50 px-3 py-2 text-center">
-              <div className="text-[12px] font-bold text-blue-700">全国政采入驻咨询热线</div>
-              <div className="mt-0.5 font-mono text-[18px] font-extrabold text-slate-900">{phone400}</div>
+              <div className="w-full flex justify-end mb-1">
+                <button
+                  onClick={handleCloseFloat}
+                  className="text-gray-400 hover:text-gray-700 font-bold text-sm bg-gray-100/50 hover:bg-gray-100 rounded-full w-5 h-5 flex items-center justify-center"
+                >
+                  ×
+                </button>
+              </div>
+              <div className="float-window-content flex-1 text-left">
+                <p className="text-[13px] leading-6 text-slate-700">
+                  {floatNoticeText}
+                </p>
+                <div className="mt-3 rounded bg-blue-50 px-3 py-2 text-center">
+                  <div className="text-[12px] font-bold text-blue-700">{floatHotlineLabel}</div>
+                  <div className="mt-0.5 font-mono text-[18px] font-extrabold text-slate-900">{phone400}</div>
+                </div>
+              </div>
+              <button
+                onClick={(e) => { e.stopPropagation(); triggerRegistration(); }}
+                className="mt-3 w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm font-bold"
+              >
+                {floatButtonLabel}
+              </button>
             </div>
-          </div>
-          <button 
-            onClick={(e) => { e.stopPropagation(); triggerRegistration(); }}
-            className="mt-3 w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm font-bold"
-          >
-            立即登记报名
-          </button>
-        </div>
+          ))}
+        </>
       )}
 
       {/* Login Progress Query Modal Dialog */}
