@@ -84,6 +84,32 @@ const hotServiceItems: Array<{ name: string; icon: HotServiceIconType }> = [
   { name: "上传标书服务", icon: "upload" },
 ];
 
+const zctCategoryItems: Array<{ name: string; icon: HotServiceIconType }> = [
+  { name: "电脑/服务器/网络设备", icon: "form" },
+  { name: "办公桌椅/办公箱柜", icon: "book" },
+  { name: "生活电器/大型家电", icon: "shop" },
+  { name: "办公设备/硒鼓油墨", icon: "tools" },
+  { name: "清洁日化/居家日用", icon: "entry" },
+  { name: "商务中介/广告服务", icon: "edit" },
+  { name: "信息技术/数据处理", icon: "settle" },
+  { name: "维修保养/装配服务", icon: "lock" },
+  { name: "工程咨询/工程造价", icon: "download" },
+  { name: "租赁租借/场地租赁", icon: "orbit" },
+];
+
+const zctGuideItems: Array<{ name: string; icon: HotServiceIconType }> = [
+  { name: "供应商指南", icon: "orbit" },
+  { name: "采购单位指南", icon: "edit" },
+  { name: "法律声明", icon: "shop" },
+  { name: "履约交付标准", icon: "book" },
+  { name: "付费指导", icon: "tools" },
+  { name: "资料审核条款", icon: "form" },
+  { name: "付费协议", icon: "lock" },
+  { name: "资质管理办法", icon: "entry" },
+  { name: "隐私政策", icon: "shield" },
+  { name: "发票申请说明", icon: "settle" },
+];
+
 function HotServiceIcon({ type }: { type: HotServiceIconType }) {
   const common = {
     fill: "none",
@@ -706,6 +732,101 @@ export default function Home() {
 
         </div>
       </div>
+
+      {/* Top marketplace category area */}
+      <section className="top-category-section" aria-label="政采服务类目">
+        <div className="w1200 px-4 md:px-0">
+          <div className="top-marketplace-panel">
+            <aside className="top-marketplace-categories" aria-label="商品服务类目">
+              {zctCategoryItems.map((item) => (
+                <button
+                  key={item.name}
+                  type="button"
+                  className="top-marketplace-category"
+                  onClick={() => triggerRegistration()}
+                >
+                  <span className="top-marketplace-icon" aria-hidden="true">
+                    <HotServiceIcon type={item.icon} />
+                  </span>
+                  <span>{item.name}</span>
+                </button>
+              ))}
+            </aside>
+
+            <main className="top-marketplace-main">
+              <button
+                type="button"
+                className="top-marketplace-banner"
+                onClick={() => triggerRegistration()}
+              >
+                <div className="top-marketplace-banner-copy">
+                  <span>政采通政采服务云平台</span>
+                  <small>WWW.ZCTYUN.COM</small>
+                  <strong>政采供应商火热入驻中</strong>
+                  <div>
+                    <b>服务采购单位：</b>
+                    <p>国央企、行政事业单位</p>
+                    <p>定点服务、分散服务市场、货物、设备、材料、小额工程直采</p>
+                  </div>
+                </div>
+                <div className="top-marketplace-visual" aria-hidden="true">
+                  <div className="top-marketplace-shield">✓</div>
+                </div>
+                <em>全国政采咨询专线：{phone400}</em>
+              </button>
+
+              <button
+                type="button"
+                className="top-marketplace-news"
+                onClick={() => triggerRegistration()}
+              >
+                <div className="top-marketplace-news-badge">
+                  <span>政采</span>
+                  <span>资讯</span>
+                </div>
+                <div>
+                  <h3>关于政府采购电子卖场第四批商品上线的通知</h3>
+                  <p>
+                    喜报政采通平台入选“2022年全国国家数字化改革优秀应用”，
+                    名单彰显政采通平台入选优秀应用名单，助力供应商高效入驻政采平台。
+                  </p>
+                </div>
+              </button>
+            </main>
+
+            <aside className="top-marketplace-side">
+              <div className="top-marketplace-login">
+                <div className="top-marketplace-login-icon" aria-hidden="true">
+                  <HotServiceIcon type="shield" />
+                </div>
+                <h3>欢迎供应商申请入驻</h3>
+                <div>
+                  <button type="button" onClick={() => triggerRegistration()}>用户登录</button>
+                  <button type="button" onClick={() => triggerRegistration()}>用户注册</button>
+                </div>
+              </div>
+
+              <div className="top-marketplace-guide">
+                <h3>业务指南</h3>
+                <div>
+                  {zctGuideItems.map((item) => (
+                    <button
+                      key={item.name}
+                      type="button"
+                      onClick={() => triggerRegistration()}
+                    >
+                      <span aria-hidden="true">
+                        <HotServiceIcon type={item.icon} />
+                      </span>
+                      {item.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
 
       {/* Hero Big Ad Banner */}
       <div className="w1200 mt10">
