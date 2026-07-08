@@ -627,6 +627,7 @@ html, body {
 }
 
 .top-marketplace-panel {
+  position: relative;
   display: grid;
   grid-template-columns: 240px minmax(0, 1fr) 300px;
   gap: 20px;
@@ -660,9 +661,15 @@ html, body {
   transition: color 0.18s ease, transform 0.18s ease;
 }
 
-.top-marketplace-category:hover {
+.top-marketplace-category:hover,
+.top-marketplace-category.active {
+  background: #f6fbff;
   color: #0b68b7;
   transform: translateX(2px);
+}
+
+.top-marketplace-category.active {
+  box-shadow: inset 4px 0 0 #2f80ed, 0 6px 16px rgba(47, 128, 237, 0.08);
 }
 
 .top-marketplace-icon {
@@ -678,6 +685,66 @@ html, body {
   width: 100%;
   height: 100%;
   display: block;
+}
+
+.top-marketplace-subcategory-panel {
+  position: absolute;
+  left: 260px;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 6;
+  overflow-y: auto;
+  background: #ffffff;
+  border-left: 1px solid #e6eef8;
+  box-shadow: 10px 0 26px rgba(15, 23, 42, 0.08);
+  padding: 14px 24px 20px;
+}
+
+.top-marketplace-subcategory-group {
+  margin-bottom: 18px;
+}
+
+.top-marketplace-subcategory-group h3 {
+  position: relative;
+  margin-bottom: 12px;
+  padding-left: 12px;
+  color: #0b2541;
+  font-size: 18px;
+  line-height: 1.2;
+  font-weight: 800;
+}
+
+.top-marketplace-subcategory-group h3::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 1px;
+  width: 4px;
+  height: 21px;
+  background: #0b68b7;
+}
+
+.top-marketplace-subcategory-group > div {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 12px 20px;
+}
+
+.top-marketplace-subcategory-group button {
+  border: 0;
+  background: transparent;
+  color: #4b5f75;
+  cursor: pointer;
+  text-align: left;
+  font-size: 14px;
+  line-height: 1.35;
+  white-space: nowrap;
+  transition: color 0.16s ease;
+}
+
+.top-marketplace-subcategory-group button:hover {
+  color: #0b68b7;
 }
 
 .top-marketplace-main {
@@ -2010,6 +2077,10 @@ html, body {
     min-height: 40px !important;
     gap: 8px !important;
     font-size: 13px !important;
+  }
+
+  .top-marketplace-subcategory-panel {
+    display: none !important;
   }
 
   .top-marketplace-main {

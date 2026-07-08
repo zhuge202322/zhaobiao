@@ -84,17 +84,110 @@ const hotServiceItems: Array<{ name: string; icon: HotServiceIconType }> = [
   { name: "上传标书服务", icon: "upload" },
 ];
 
-const zctCategoryItems: Array<{ name: string; icon: HotServiceIconType }> = [
-  { name: "电脑/服务器/网络设备", icon: "form" },
-  { name: "办公桌椅/办公箱柜", icon: "book" },
-  { name: "生活电器/大型家电", icon: "shop" },
-  { name: "办公设备/硒鼓油墨", icon: "tools" },
-  { name: "清洁日化/居家日用", icon: "entry" },
-  { name: "商务中介/广告服务", icon: "edit" },
-  { name: "信息技术/数据处理", icon: "settle" },
-  { name: "维修保养/装配服务", icon: "lock" },
-  { name: "工程咨询/工程造价", icon: "download" },
-  { name: "租赁租借/场地租赁", icon: "orbit" },
+type ZctSubCategoryGroup = {
+  title: string;
+  items: string[];
+};
+
+type ZctCategoryItem = {
+  name: string;
+  icon: HotServiceIconType;
+  groups: ZctSubCategoryGroup[];
+};
+
+const zctCategoryItems: ZctCategoryItem[] = [
+  {
+    name: "电脑/服务器/网络设备",
+    icon: "form",
+    groups: [
+      { title: "计算机设备", items: ["台式计算机", "便携式计算机", "一体机", "工作站", "平板电脑", "显示器"] },
+      { title: "服务器/存储", items: ["服务器", "机架式服务器", "塔式服务器", "存储设备", "磁盘阵列", "网络存储", "备份一体机"] },
+      { title: "网络设备", items: ["路由器", "交换机", "防火墙", "VPN设备", "网关", "无线AP", "网络机柜", "综合布线"] },
+      { title: "安全设备", items: ["入侵检测", "安全审计", "终端安全", "身份认证", "数据备份", "漏洞扫描"] },
+    ],
+  },
+  {
+    name: "办公桌椅/办公箱柜",
+    icon: "book",
+    groups: [
+      { title: "办公桌椅", items: ["办公桌", "会议桌", "办公椅", "会议椅", "沙发", "茶几", "培训桌椅"] },
+      { title: "柜架收纳", items: ["文件柜", "保险柜", "密集架", "书柜", "更衣柜", "货架", "档案柜"] },
+      { title: "会议家具", items: ["演讲台", "接待台", "屏风工位", "洽谈桌", "主席台", "礼堂椅"] },
+    ],
+  },
+  {
+    name: "生活电器/大型家电",
+    icon: "shop",
+    groups: [
+      { title: "大型家电", items: ["空调", "冰箱", "洗衣机", "电视机", "热水器", "净水器", "冷柜"] },
+      { title: "生活电器", items: ["饮水机", "电风扇", "吸尘器", "空气净化器", "微波炉", "消毒柜", "取暖器"] },
+      { title: "厨房设备", items: ["电磁炉", "蒸饭柜", "烟灶设备", "商用厨具", "开水器", "制冰机"] },
+    ],
+  },
+  {
+    name: "办公设备/硒鼓油墨",
+    icon: "tools",
+    groups: [
+      { title: "办公用纸", items: ["其他功能用纸", "标签打印纸/条码纸", "彩色复印纸", "传真纸", "复写纸", "喷墨/相片纸/卡纸"] },
+      { title: "办公设备/耗材", items: ["碎纸机", "碎纸机配件", "扫描仪", "复印机", "保险箱/柜", "保管箱", "切纸机", "多功能一体机配件", "彩色激光多功能一体机", "其它多功能一体机", "触控一体机", "黑白激光多功能一体机", "墨仓式多功能一体机", "喷墨多功能一体机", "打字机/配件", "绘图仪", "其它销毁设备", "销毁设备", "光标阅卷机", "刻字机", "冷裱机", "一体化速印机", "幻灯机", "办税终端机", "其它", "高拍仪", "手机屏蔽柜"] },
+      { title: "打印/复印及配件", items: ["打印机", "打印机配件", "喷墨打印机", "针式打印机", "复印机", "复印机配件", "硒鼓", "墨盒", "粉盒", "色带"] },
+      { title: "传真/通信", items: ["传真机", "电话机", "对讲机", "录音电话", "视频会议终端", "通信配件"] },
+    ],
+  },
+  {
+    name: "清洁日化/居家日用",
+    icon: "entry",
+    groups: [
+      { title: "清洁用品", items: ["洗手液", "消毒液", "垃圾袋", "拖把", "扫把", "清洁剂", "纸巾", "擦手纸"] },
+      { title: "日用百货", items: ["雨具", "劳保用品", "收纳用品", "床上用品", "饮用水", "一次性用品", "保温用品"] },
+      { title: "防疫物资", items: ["口罩", "手套", "体温计", "防护服", "酒精", "应急包", "消杀设备"] },
+    ],
+  },
+  {
+    name: "商务中介/广告服务",
+    icon: "edit",
+    groups: [
+      { title: "商务服务", items: ["审计服务", "资产评估", "法律服务", "会计服务", "招标代理", "会议服务", "咨询服务"] },
+      { title: "广告服务", items: ["广告制作", "标识标牌", "宣传册", "喷绘写真", "展板展架", "视频制作", "活动策划"] },
+      { title: "印刷服务", items: ["文件印刷", "票据印刷", "资料装订", "证书制作", "档案整理", "包装印刷"] },
+    ],
+  },
+  {
+    name: "信息技术/数据处理",
+    icon: "settle",
+    groups: [
+      { title: "软件服务", items: ["软件开发", "系统集成", "运维服务", "云服务", "信息安全", "等保测评", "软件测试"] },
+      { title: "数据服务", items: ["数据处理", "数据采集", "数据标注", "档案数字化", "信息化咨询", "数据治理"] },
+      { title: "硬件维护", items: ["电脑维修", "网络维护", "机房维护", "设备租赁", "驻场服务", "巡检服务"] },
+    ],
+  },
+  {
+    name: "维修保养/装配服务",
+    icon: "lock",
+    groups: [
+      { title: "设备维修", items: ["办公设备维修", "家电维修", "空调维修", "电梯维保", "消防维保", "安防维保"] },
+      { title: "装配安装", items: ["家具安装", "设备安装", "监控安装", "网络布线", "门禁安装", "弱电施工"] },
+      { title: "车辆服务", items: ["车辆维修", "车辆保养", "车辆检测", "轮胎更换", "洗车服务", "救援服务"] },
+    ],
+  },
+  {
+    name: "工程咨询/工程造价",
+    icon: "download",
+    groups: [
+      { title: "工程咨询", items: ["项目建议书", "可研报告", "工程设计", "勘察服务", "监理服务", "项目管理"] },
+      { title: "工程造价", items: ["预算编制", "清单编制", "结算审核", "跟踪审计", "招标控制价", "工程审计"] },
+      { title: "工程施工", items: ["装修改造", "零星维修", "园林绿化", "安防工程", "市政工程", "水电安装"] },
+    ],
+  },
+  {
+    name: "租赁租借/场地租赁",
+    icon: "orbit",
+    groups: [
+      { title: "设备租赁", items: ["电脑租赁", "打印机租赁", "车辆租赁", "机械租赁", "音视频设备", "办公设备租赁"] },
+      { title: "场地租赁", items: ["会议室租赁", "培训场地", "展览场地", "仓储场地", "停车场", "活动场地"] },
+      { title: "服务租借", items: ["工位租赁", "临时办公", "物业配套", "活动执行", "会务服务", "展会服务"] },
+    ],
+  },
 ];
 
 const zctGuideItems: Array<{ name: string; icon: HotServiceIconType }> = [
@@ -231,6 +324,7 @@ export default function Home() {
   const [isMobile, setIsMobile] = useState(false);
   const [showAllQueryLinks, setShowAllQueryLinks] = useState(false);
   const [showAllCards, setShowAllCards] = useState(false);
+  const [activeMarketplaceCategory, setActiveMarketplaceCategory] = useState<number | null>(null);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -736,13 +830,18 @@ export default function Home() {
       {/* Top marketplace category area */}
       <section className="top-category-section" aria-label="政采服务类目">
         <div className="w1200 px-4 md:px-0">
-          <div className="top-marketplace-panel">
+          <div
+            className="top-marketplace-panel"
+            onMouseLeave={() => setActiveMarketplaceCategory(null)}
+          >
             <aside className="top-marketplace-categories" aria-label="商品服务类目">
-              {zctCategoryItems.map((item) => (
+              {zctCategoryItems.map((item, index) => (
                 <button
                   key={item.name}
                   type="button"
-                  className="top-marketplace-category"
+                  className={`top-marketplace-category ${activeMarketplaceCategory === index ? "active" : ""}`}
+                  onMouseEnter={() => setActiveMarketplaceCategory(index)}
+                  onFocus={() => setActiveMarketplaceCategory(index)}
                   onClick={() => triggerRegistration()}
                 >
                   <span className="top-marketplace-icon" aria-hidden="true">
@@ -752,6 +851,30 @@ export default function Home() {
                 </button>
               ))}
             </aside>
+
+            {activeMarketplaceCategory !== null && zctCategoryItems[activeMarketplaceCategory] && (
+              <div
+                className="top-marketplace-subcategory-panel"
+                onMouseEnter={() => setActiveMarketplaceCategory(activeMarketplaceCategory)}
+              >
+                {zctCategoryItems[activeMarketplaceCategory].groups.map((group) => (
+                  <div className="top-marketplace-subcategory-group" key={group.title}>
+                    <h3>{group.title}</h3>
+                    <div>
+                      {group.items.map((name) => (
+                        <button
+                          key={`${group.title}-${name}`}
+                          type="button"
+                          onClick={() => triggerRegistration()}
+                        >
+                          {name}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
 
             <main className="top-marketplace-main">
               <button
