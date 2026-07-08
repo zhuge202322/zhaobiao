@@ -884,7 +884,7 @@ export default function Home() {
               >
                 <div className="top-marketplace-banner-copy">
                   <span>政采通政采服务云平台</span>
-                  <small>WWW.ZCTYUN.COM</small>
+                  <small>WWW.ZCYTWGOV.COM</small>
                   <strong>政采供应商火热入驻中</strong>
                   <div>
                     <b>服务采购单位：</b>
