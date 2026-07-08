@@ -183,6 +183,17 @@ function HotServiceIcon({ type }: { type: HotServiceIconType }) {
 const floatNoticeText = "促进企业发展，深化政采制度改革，优化政采流程，突出政采公正、公平、公开、透明，现全国已展开优质供应商入驻政采平台，开通线上政采电子卖场，开办网上超市等相关登记报名工作。";
 const floatHotlineLabel = "全国政采入驻咨询热线";
 const floatButtonLabel = "立即登记报名";
+const floatingMenuItems: Array<{ label: string; icon: HotServiceIconType }> = [
+  { label: "投标人", icon: "orbit" },
+  { label: "招标人", icon: "edit" },
+  { label: "招标代理", icon: "settle" },
+  { label: "专家评委", icon: "book" },
+  { label: "监管部门", icon: "entry" },
+  { label: "工作人员", icon: "shield" },
+  { label: "工程大厅", icon: "download" },
+  { label: "采购大厅", icon: "shop" },
+  { label: "产权自主交易", icon: "form" },
+];
 
 export default function Home() {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -1068,37 +1079,53 @@ export default function Home() {
       {/* Floating Hotline widget */}
       {showFloatWindow && (
         <>
-          {(["left", "right"] as const).map((side) => (
-            <div
-              key={side}
-              onClick={() => triggerRegistration()}
-              className={`float-window float-window-${side} flex flex-col cursor-pointer`}
-            >
-              <div className="w-full flex justify-end mb-1">
-                <button
-                  onClick={handleCloseFloat}
-                  className="text-gray-400 hover:text-gray-700 font-bold text-sm bg-gray-100/50 hover:bg-gray-100 rounded-full w-5 h-5 flex items-center justify-center"
-                >
-                  ×
-                </button>
-              </div>
-              <div className="float-window-content flex-1 text-left">
-                <p className="text-[13px] leading-6 text-slate-700">
-                  {floatNoticeText}
-                </p>
-                <div className="mt-3 rounded bg-blue-50 px-3 py-2 text-center">
-                  <div className="text-[12px] font-bold text-blue-700">{floatHotlineLabel}</div>
-                  <div className="mt-0.5 font-mono text-[18px] font-extrabold text-slate-900">{phone400}</div>
-                </div>
-              </div>
+          <div
+            onClick={() => triggerRegistration()}
+            className="float-window float-window-left flex flex-col cursor-pointer"
+          >
+            <div className="w-full flex justify-end mb-1">
               <button
-                onClick={(e) => { e.stopPropagation(); triggerRegistration(); }}
-                className="mt-3 w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm font-bold"
+                onClick={handleCloseFloat}
+                className="text-gray-400 hover:text-gray-700 font-bold text-sm bg-gray-100/50 hover:bg-gray-100 rounded-full w-5 h-5 flex items-center justify-center"
               >
-                {floatButtonLabel}
+                ×
               </button>
             </div>
-          ))}
+            <div className="float-window-content flex-1 text-left">
+              <p className="text-[13px] leading-6 text-slate-700">
+                {floatNoticeText}
+              </p>
+              <div className="mt-3 rounded bg-blue-50 px-3 py-2 text-center">
+                <div className="text-[12px] font-bold text-blue-700">{floatHotlineLabel}</div>
+                <div className="mt-0.5 font-mono text-[18px] font-extrabold text-slate-900">{phone400}</div>
+              </div>
+            </div>
+            <button
+              onClick={(e) => { e.stopPropagation(); triggerRegistration(); }}
+              className="mt-3 w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm font-bold"
+            >
+              {floatButtonLabel}
+            </button>
+          </div>
+
+          <nav className="floating-menu-right" aria-label="政采快捷菜单">
+            <div className="floating-menu-title">准安新系统</div>
+            <div className="floating-menu-list">
+              {floatingMenuItems.map((item) => (
+                <button
+                  key={item.label}
+                  type="button"
+                  className="floating-menu-item"
+                  onClick={() => triggerRegistration()}
+                >
+                  <span className="floating-menu-icon" aria-hidden="true">
+                    <HotServiceIcon type={item.icon} />
+                  </span>
+                  <span className="floating-menu-label">{item.label}</span>
+                </button>
+              ))}
+            </div>
+          </nav>
         </>
       )}
 
