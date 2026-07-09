@@ -13,6 +13,27 @@ import {
   defaultJjlist as readableJjlist,
   defaultXjlist as readableXjlist,
 } from "@/lib/articles";
+import {
+  cnbmNoticeTabs,
+  emptyCnbmNoticeGroups,
+  type CnbmNoticeGroupMap,
+} from "@/lib/cnbmNotices";
+import {
+  ceecNoticeTabs,
+  emptyCeecNoticeGroups,
+  type CeecNoticeGroupMap,
+} from "@/lib/ceecNotices";
+import {
+  ispaceNoticeTabs,
+  emptyIspaceNoticeGroups,
+  type IspaceNoticeGroupMap,
+} from "@/lib/ispaceNotices";
+import {
+  ygcgNoticeTabs,
+  emptyYgcgNoticeGroups,
+  type YgcgNoticeGroupMap,
+} from "@/lib/ygcgNotices";
+import { fallbackTradeAnnouncements, type TradeAnnouncement } from "@/lib/tradeAnnouncements";
 
 interface NewsItem {
   id: string;
@@ -22,6 +43,11 @@ interface NewsItem {
 }
 
 type NewsTabId = "cggglist" | "xjlist" | "jjlist" | "ddlist";
+
+type EntryPromptTarget = {
+  title: string;
+  detailUrl: string;
+};
 
 type MemberRecord = Record<string, {
   companyName?: string;
@@ -49,10 +75,10 @@ interface OpenCard {
 }
 
 const openCards: OpenCard[] = [
-  { id: "infoopenlist1zb", title: "招投标商机", keywords: "", tabs: ["采购公告", "结果通知", "通知公告", "其它公告"] },
-  { id: "infoopenlist2zb", title: "政企采购电子卖场", keywords: "局,市,街道,企业,电子卖场", tabs: ["采购公告", "结果通知", "变更通知", "其它公告"] },
-  { id: "infoopenlist3zb", title: "央国企采购", keywords: "中央,央企,企业,国企,国家", tabs: ["采购公告", "结果公告", "其它公告"] },
-  { id: "infoopenlist6zb", title: "军队采购", keywords: "军,部队,地方,国防,后勤,炊事,营房", tabs: ["采购公告", "结果公告", "其它公告"] },
+  { id: "infoopenlist1zb", title: "招投标商机", keywords: "", tabs: cnbmNoticeTabs.map((tab) => tab.label) },
+  { id: "infoopenlist2zb", title: "政企采购电子卖场", keywords: "局,市,街道,企业,电子卖场", tabs: ygcgNoticeTabs.map((tab) => tab.label) },
+  { id: "infoopenlist3zb", title: "央国企采购", keywords: "中央,央企,企业,国企,国家", tabs: ceecNoticeTabs.map((tab) => tab.label) },
+  { id: "infoopenlist6zb", title: "军队采购", keywords: "军,部队,地方,国防,后勤,炊事,营房", tabs: ispaceNoticeTabs.map((tab) => tab.label) },
 ];
 
 type HotServiceIconType =
@@ -325,6 +351,16 @@ export default function Home() {
   const [showAllQueryLinks, setShowAllQueryLinks] = useState(false);
   const [showAllCards, setShowAllCards] = useState(false);
   const [activeMarketplaceCategory, setActiveMarketplaceCategory] = useState<number | null>(null);
+  const [tradeAnnouncements, setTradeAnnouncements] = useState<TradeAnnouncement[]>(fallbackTradeAnnouncements);
+  const [pendingEntryPrompt, setPendingEntryPrompt] = useState<EntryPromptTarget | null>(null);
+  const [cnbmNoticeGroups, setCnbmNoticeGroups] = useState<CnbmNoticeGroupMap>(emptyCnbmNoticeGroups);
+  const [cnbmNoticesLoaded, setCnbmNoticesLoaded] = useState(false);
+  const [ceecNoticeGroups, setCeecNoticeGroups] = useState<CeecNoticeGroupMap>(emptyCeecNoticeGroups);
+  const [ceecNoticesLoaded, setCeecNoticesLoaded] = useState(false);
+  const [ispaceNoticeGroups, setIspaceNoticeGroups] = useState<IspaceNoticeGroupMap>(emptyIspaceNoticeGroups);
+  const [ispaceNoticesLoaded, setIspaceNoticesLoaded] = useState(false);
+  const [ygcgNoticeGroups, setYgcgNoticeGroups] = useState<YgcgNoticeGroupMap>(emptyYgcgNoticeGroups);
+  const [ygcgNoticesLoaded, setYgcgNoticesLoaded] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -333,6 +369,122 @@ export default function Home() {
     checkMobile();
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  useEffect(() => {
+    let ignore = false;
+
+    fetch("/api/trade-announcements")
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data: { items?: TradeAnnouncement[] } | null) => {
+        if (!ignore && data?.items?.length) {
+          setTradeAnnouncements(data.items);
+        }
+      })
+      .catch(() => {
+        // Keep the built-in announcement list when the source site is unavailable.
+      });
+
+    return () => {
+      ignore = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    let ignore = false;
+
+    fetch("/api/cnbm-notices?limit=10", { cache: "no-store" })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data: { groups?: CnbmNoticeGroupMap } | null) => {
+        if (!ignore && data?.groups) {
+          setCnbmNoticeGroups(data.groups);
+        }
+        if (!ignore) {
+          setCnbmNoticesLoaded(true);
+        }
+      })
+      .catch(() => {
+        if (!ignore) {
+          setCnbmNoticesLoaded(true);
+        }
+        // Keep the card empty if the source site is temporarily unavailable.
+      });
+
+    return () => {
+      ignore = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    let ignore = false;
+
+    fetch("/api/ceec-notices?limit=10", { cache: "no-store" })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data: { groups?: CeecNoticeGroupMap } | null) => {
+        if (!ignore && data?.groups) {
+          setCeecNoticeGroups(data.groups);
+        }
+        if (!ignore) {
+          setCeecNoticesLoaded(true);
+        }
+      })
+      .catch(() => {
+        if (!ignore) {
+          setCeecNoticesLoaded(true);
+        }
+      });
+
+    return () => {
+      ignore = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    let ignore = false;
+
+    fetch("/api/ispace-notices?limit=10", { cache: "no-store" })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data: { groups?: IspaceNoticeGroupMap } | null) => {
+        if (!ignore && data?.groups) {
+          setIspaceNoticeGroups(data.groups);
+        }
+        if (!ignore) {
+          setIspaceNoticesLoaded(true);
+        }
+      })
+      .catch(() => {
+        if (!ignore) {
+          setIspaceNoticesLoaded(true);
+        }
+      });
+
+    return () => {
+      ignore = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    let ignore = false;
+
+    fetch("/api/ygcg-notices?limit=10", { cache: "no-store" })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data: { groups?: YgcgNoticeGroupMap } | null) => {
+        if (!ignore && data?.groups) {
+          setYgcgNoticeGroups(data.groups);
+        }
+        if (!ignore) {
+          setYgcgNoticesLoaded(true);
+        }
+      })
+      .catch(() => {
+        if (!ignore) {
+          setYgcgNoticesLoaded(true);
+        }
+      });
+
+    return () => {
+      ignore = true;
+    };
   }, []);
   
   const resolveArticleId = (title: string, defaultId?: string) => {
@@ -353,8 +505,6 @@ export default function Home() {
   const [xjlist, setXjlist] = useState<NewsItem[]>(readableXjlist);
   const [jjlist, setJjlist] = useState<NewsItem[]>(readableJjlist);
   const [ddlist, setDdlist] = useState<NewsItem[]>(readableDdlist);
-  const [ztbsjList, setZtbsjList] = useState<NewsItem[]>([]);
-  const [zqcgList, setZqcgList] = useState<NewsItem[]>([]);
 
   // Bidding Announcement Cards State (Track selected tab per card ID)
   const [cardActiveTab, setCardActiveTab] = useState<Record<string, number>>({
@@ -412,11 +562,6 @@ export default function Home() {
         setPhone400(savedPhone);
       }
 
-      const savedZtbsj = getStorageItem("zcy_news_ztbsj");
-      const savedZqcg = getStorageItem("zcy_news_zqcg");
-
-      setZtbsjList(parseStorageJson<NewsItem[]>(savedZtbsj, []));
-      setZqcgList(parseStorageJson<NewsItem[]>(savedZqcg, []));
     }, 0);
   }, []);
 
@@ -445,7 +590,7 @@ export default function Home() {
       setIsSendingInlineSms(false);
       const code = Math.floor(1000 + Math.random() * 9000).toString();
       setInlineMockCode(code);
-      alert(`【政采通】您的验证码是：${code}，请在页面中输入完成验证。`);
+      alert(`【全国政采云】您的验证码是：${code}，请在页面中输入完成验证。`);
     }, 800);
   };
 
@@ -517,6 +662,20 @@ export default function Home() {
   const triggerRegistration = (phoneVal = "") => {
     setActivePhone(phoneVal);
     setIsFormOpen(true);
+  };
+
+  const handleAnnouncementEntry = () => {
+    setPendingEntryPrompt(null);
+    triggerRegistration();
+  };
+
+  const handleAnnouncementDetail = () => {
+    if (pendingEntryPrompt?.detailUrl) {
+      window.location.href = pendingEntryPrompt.detailUrl;
+      return;
+    }
+
+    setPendingEntryPrompt(null);
   };
 
   const handleCloseFloat = (e: React.MouseEvent) => {
@@ -649,15 +808,15 @@ export default function Home() {
             <div className="flex items-center gap-2 md:gap-3">
               <img 
                 src="/logo.png" 
-                alt="政采通Logo" 
+                alt="全国政采云服务云平台Logo" 
                 className="w-9 h-9 md:w-12 md:h-12 object-contain shrink-0"
               />
               <div>
                 <div className="text-lg md:text-3xl font-bold text-slate-800 tracking-wide leading-tight">
-                  政采通政采服务云平台
+                  全国政采云服务云平台
                 </div>
                 <div className="hidden md:block text-[10px] text-gray-400 font-mono tracking-widest mt-0.5">
-                  ZHENG CAI TONG ZHENG CAI FU WU YUN PING TAI
+                  QUAN GUO ZHENG CAI YUN FU WU YUN PING TAI
                 </div>
               </div>
             </div>
@@ -883,8 +1042,8 @@ export default function Home() {
                 onClick={() => triggerRegistration()}
               >
                 <div className="top-marketplace-banner-copy">
-                  <span>政采通政采服务云平台</span>
-                  <small>WWW.ZCYTWGOV.COM</small>
+                  <span>全国政采云服务云平台</span>
+                  <small>zcytwgov.com</small>
                   <strong>政采供应商火热入驻中</strong>
                   <div>
                     <b>服务采购单位：</b>
@@ -898,23 +1057,35 @@ export default function Home() {
                 <em>全国政采咨询专线：{phone400}</em>
               </button>
 
-              <button
-                type="button"
-                className="top-marketplace-news"
-                onClick={() => triggerRegistration()}
-              >
-                <div className="top-marketplace-news-badge">
-                  <span>政采</span>
-                  <span>资讯</span>
+              <section className="top-marketplace-notice" aria-label="平台公告">
+                <div className="top-marketplace-notice-head">
+                  <h3>平台公告</h3>
+                  <button type="button" onClick={() => triggerRegistration()}>
+                    &gt;&gt;更多
+                  </button>
                 </div>
-                <div>
-                  <h3>关于政府采购电子卖场第四批商品上线的通知</h3>
-                  <p>
-                    喜报政采通平台入选“2022年全国国家数字化改革优秀应用”，
-                    名单彰显政采通平台入选优秀应用名单，助力供应商高效入驻政采平台。
-                  </p>
+                <div className="top-marketplace-notice-scroll">
+                  <div className="top-marketplace-notice-track">
+                    {[...tradeAnnouncements, ...tradeAnnouncements].map((item, index) => (
+                      <button
+                        key={`${item.url}-${index}`}
+                        type="button"
+                        className={`top-marketplace-notice-item${item.isNew ? " is-new" : ""}`}
+                        onClick={() => setPendingEntryPrompt({
+                          title: item.title,
+                          detailUrl: `/announcement/${encodeURIComponent(item.id)}`,
+                        })}
+                        title={item.title}
+                      >
+                        <span className="top-marketplace-notice-dot" aria-hidden="true" />
+                        <span className="top-marketplace-notice-title">{item.title}</span>
+                        {item.isNew && <span className="top-marketplace-notice-new">new</span>}
+                        <time dateTime={item.date}>{item.date}</time>
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </button>
+              </section>
             </main>
 
             <aside className="top-marketplace-side">
@@ -1152,6 +1323,150 @@ export default function Home() {
                 <div className="info-open-card-body pt-1">
                   <div className="grid grid-cols-1 gap-2">
                     {(() => {
+                      if (card.id === "infoopenlist1zb") {
+                        const activeIndex = cardActiveTab[card.id] || 0;
+                        const activeNoticeTab = cnbmNoticeTabs[activeIndex] ?? cnbmNoticeTabs[0];
+                        const cnbmItems = (cnbmNoticeGroups[activeNoticeTab.type] ?? []).slice(0, 10);
+
+                        if (!cnbmItems.length) {
+                          return (
+                            <div className="px-2 py-6 text-center text-xs text-slate-400">
+                              {cnbmNoticesLoaded ? "暂无平台公告" : "平台公告加载中..."}
+                            </div>
+                          );
+                        }
+
+                        return cnbmItems.map((item, iidx) => (
+                          <button
+                            key={item.id || iidx}
+                            type="button"
+                            className="card-body-ip-item flex w-full items-start border-0 bg-transparent py-1.5 px-2 text-left rounded hover:bg-gray-50/70 transition-all text-xs sm:text-sm group"
+                            onClick={() => setPendingEntryPrompt({
+                              title: item.title,
+                              detailUrl: `/cnbm-notice/${encodeURIComponent(item.id)}`,
+                            })}
+                          >
+                            <div className="dot w-1.5 h-1.5 bg-gray-400 group-hover:bg-blue-500 rounded-full mt-2 mr-3 shrink-0"></div>
+                            <div className="title min-w-0 flex-1 flex items-center gap-2 select-none">
+                              <div className="min-w-0 flex-1 truncate text-slate-700 group-hover:text-[#3991F6] transition-colors leading-snug">
+                                {item.title}
+                              </div>
+                              <span className="shrink-0 text-[10px] sm:text-xs text-gray-400 tabular-nums">
+                                {item.date.slice(5)}
+                              </span>
+                            </div>
+                          </button>
+                        ));
+                      }
+
+                      if (card.id === "infoopenlist2zb") {
+                        const activeIndex = cardActiveTab[card.id] || 0;
+                        const activeNoticeTab = ygcgNoticeTabs[activeIndex] ?? ygcgNoticeTabs[0];
+                        const ygcgItems = (ygcgNoticeGroups[activeNoticeTab.type] ?? []).slice(0, 10);
+
+                        if (!ygcgItems.length) {
+                          return (
+                            <div className="px-2 py-6 text-center text-xs text-slate-400">
+                              {ygcgNoticesLoaded ? "暂无政企采购公告" : "政企采购公告加载中..."}
+                            </div>
+                          );
+                        }
+
+                        return ygcgItems.map((item, iidx) => (
+                          <button
+                            key={item.id || iidx}
+                            type="button"
+                            className="card-body-ip-item flex w-full items-start border-0 bg-transparent py-1.5 px-2 text-left rounded hover:bg-gray-50/70 transition-all text-xs sm:text-sm group"
+                            onClick={() => setPendingEntryPrompt({
+                              title: item.title,
+                              detailUrl: `/ygcg-notice/${encodeURIComponent(item.id)}`,
+                            })}
+                          >
+                            <div className="dot w-1.5 h-1.5 bg-gray-400 group-hover:bg-blue-500 rounded-full mt-2 mr-3 shrink-0"></div>
+                            <div className="title min-w-0 flex-1 flex items-center gap-2 select-none">
+                              <div className="min-w-0 flex-1 truncate text-slate-700 group-hover:text-[#3991F6] transition-colors leading-snug">
+                                {item.title}
+                              </div>
+                              <span className="shrink-0 text-[10px] sm:text-xs text-gray-400 tabular-nums">
+                                {item.date.slice(5)}
+                              </span>
+                            </div>
+                          </button>
+                        ));
+                      }
+
+                      if (card.id === "infoopenlist3zb") {
+                        const activeIndex = cardActiveTab[card.id] || 0;
+                        const activeNoticeTab = ceecNoticeTabs[activeIndex] ?? ceecNoticeTabs[0];
+                        const ceecItems = (ceecNoticeGroups[activeNoticeTab.type] ?? []).slice(0, 10);
+
+                        if (!ceecItems.length) {
+                          return (
+                            <div className="px-2 py-6 text-center text-xs text-slate-400">
+                              {ceecNoticesLoaded ? "暂无央国企采购公告" : "央国企采购公告加载中..."}
+                            </div>
+                          );
+                        }
+
+                        return ceecItems.map((item, iidx) => (
+                          <button
+                            key={item.id || iidx}
+                            type="button"
+                            className="card-body-ip-item flex w-full items-start border-0 bg-transparent py-1.5 px-2 text-left rounded hover:bg-gray-50/70 transition-all text-xs sm:text-sm group"
+                            onClick={() => setPendingEntryPrompt({
+                              title: item.title,
+                              detailUrl: `/ceec-notice/${encodeURIComponent(item.id)}`,
+                            })}
+                          >
+                            <div className="dot w-1.5 h-1.5 bg-gray-400 group-hover:bg-blue-500 rounded-full mt-2 mr-3 shrink-0"></div>
+                            <div className="title min-w-0 flex-1 flex items-center gap-2 select-none">
+                              <div className="min-w-0 flex-1 truncate text-slate-700 group-hover:text-[#3991F6] transition-colors leading-snug">
+                                {item.title}
+                              </div>
+                              <span className="shrink-0 text-[10px] sm:text-xs text-gray-400 tabular-nums">
+                                {item.date.slice(5)}
+                              </span>
+                            </div>
+                          </button>
+                        ));
+                      }
+
+                      if (card.id === "infoopenlist6zb") {
+                        const activeIndex = cardActiveTab[card.id] || 0;
+                        const activeNoticeTab = ispaceNoticeTabs[activeIndex] ?? ispaceNoticeTabs[0];
+                        const ispaceItems = (ispaceNoticeGroups[activeNoticeTab.type] ?? []).slice(0, 10);
+
+                        if (!ispaceItems.length) {
+                          return (
+                            <div className="px-2 py-6 text-center text-xs text-slate-400">
+                              {ispaceNoticesLoaded ? "暂无军队采购公告" : "军队采购公告加载中..."}
+                            </div>
+                          );
+                        }
+
+                        return ispaceItems.map((item, iidx) => (
+                          <button
+                            key={item.id || iidx}
+                            type="button"
+                            className="card-body-ip-item flex w-full items-start border-0 bg-transparent py-1.5 px-2 text-left rounded hover:bg-gray-50/70 transition-all text-xs sm:text-sm group"
+                            onClick={() => setPendingEntryPrompt({
+                              title: item.title,
+                              detailUrl: `/ispace-notice/${encodeURIComponent(item.id)}`,
+                            })}
+                          >
+                            <div className="dot w-1.5 h-1.5 bg-gray-400 group-hover:bg-blue-500 rounded-full mt-2 mr-3 shrink-0"></div>
+                            <div className="title min-w-0 flex-1 flex items-center gap-2 select-none">
+                              <div className="min-w-0 flex-1 truncate text-slate-700 group-hover:text-[#3991F6] transition-colors leading-snug">
+                                {item.title}
+                              </div>
+                              <span className="shrink-0 text-[10px] sm:text-xs text-gray-400 tabular-nums">
+                                {item.date.slice(5)}
+                              </span>
+                            </div>
+                          </button>
+                        ));
+                      }
+
                       const baseItems: Array<NewsItem & { desc: string }> = [
                         { id: "open-1001", title: "吉安县行政事业单位国企产权转让格式范本及操作指南", desc: "适配公共资源交易目录规范，供应商可快速准备入驻方案。", date: "2026-07-03" },
                         { id: "open-1002", title: "行政事业单位政府采购格式范本说明", desc: "规范政府采购合规要点，降低资料退单率与审核驳回率。", date: "2026-07-03" },
@@ -1159,9 +1474,7 @@ export default function Home() {
                         { id: "open-1004", title: "关于集中采购类目数字安全协议及 CA 锁申领指引", desc: "汇总安全加密与电子签章要件，是线上商务响应的必要工具。", date: "2026-07-03" }
                       ];
 
-                      let dynamicItems: NewsItem[] = [];
-                      if (card.id === "infoopenlist1zb") dynamicItems = ztbsjList;
-                      if (card.id === "infoopenlist2zb") dynamicItems = zqcgList;
+                      const dynamicItems: NewsItem[] = [];
 
                       const mergedItems: Array<NewsItem & { desc: string }> = [
                         ...dynamicItems.map(di => ({ title: di.title, desc: "", date: di.date, newBadge: di.newBadge, id: di.id })),
@@ -1353,7 +1666,6 @@ export default function Home() {
           </div>
 
           <nav className="floating-menu-right" aria-label="政采快捷菜单">
-            <div className="floating-menu-title">准安新系统</div>
             <div className="floating-menu-list">
               {floatingMenuItems.map((item) => (
                 <button
@@ -1532,7 +1844,7 @@ export default function Home() {
           )}
 
           <p className="text-[10px] text-gray-500">
-            Copyright © 2026 政采通政采服务云平台 All Rights Reserved. 招采云服（北京）科技发展有限公司 版权所有
+            Copyright © 2026 全国政采云服务云平台 All Rights Reserved. 招采云服（北京）科技发展有限公司 版权所有
           </p>
           <p className="text-[10px] text-gray-500">
             公司介绍：招采云服（北京）科技发展有限公司 | 联系我们：北京市通州区漷县镇漷兴北大街16号 | 客服电话：{phone400}
@@ -1542,6 +1854,37 @@ export default function Home() {
           </p>
         </div>
       </footer>
+
+      {pendingEntryPrompt && (
+        <div
+          className="announcement-entry-mask"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="announcement-entry-title"
+          onClick={() => setPendingEntryPrompt(null)}
+        >
+          <div className="announcement-entry-dialog" onClick={(event) => event.stopPropagation()}>
+            <button
+              type="button"
+              className="announcement-entry-close"
+              onClick={() => setPendingEntryPrompt(null)}
+              aria-label="关闭"
+            >
+              ×
+            </button>
+            <h3 id="announcement-entry-title">您还没有入驻平台</h3>
+            <p>{pendingEntryPrompt.title}</p>
+            <div className="announcement-entry-actions">
+              <button type="button" className="announcement-entry-primary" onClick={handleAnnouncementEntry}>
+                现在入驻
+              </button>
+              <button type="button" className="announcement-entry-secondary" onClick={handleAnnouncementDetail}>
+                稍后入驻
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Multi-step wizard dialog popup form */}
       <FormModal 

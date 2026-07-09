@@ -309,7 +309,7 @@ export default function AdminPage() {
           <div className="flex items-center gap-2.5">
             <span className="text-2xl">🏛️</span>
             <div>
-              <h1 className="font-bold text-sm tracking-wide text-white">政采通服务平台</h1>
+              <h1 className="font-bold text-sm tracking-wide text-white">全国政采云服务云平台</h1>
               <p className="text-[10px] text-slate-500 font-semibold">ADMIN DASHBOARD v1.1</p>
             </div>
           </div>

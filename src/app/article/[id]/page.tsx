@@ -15,7 +15,7 @@ export async function generateMetadata(props: PageProps<"/article/[id]">) {
   const article = getArticleById(decodeURIComponent(id));
 
   return {
-    title: article ? `${article.title} - 政采信息服务平台` : "文章详情 - 政采信息服务平台",
+    title: article ? `${article.title} - 全国政采云服务云平台` : "文章详情 - 全国政采云服务云平台",
     description: article?.content.slice(0, 120),
   };
 }
@@ -55,11 +55,11 @@ export default async function ArticlePage(props: PageProps<"/article/[id]">) {
       <header className="bg-[linear-gradient(180deg,#eef8ff_0%,#dff0ff_100%)]">
         <div className="mx-auto flex min-h-[128px] w-full max-w-[1200px] flex-col gap-5 px-4 py-6 md:flex-row md:items-center md:justify-between">
           <Link href="/" className="flex items-center gap-4">
-            <img src="/logo.png" alt="政采通" className="h-14 w-14 object-contain" />
+            <img src="/logo.png" alt="全国政采云服务云平台" className="h-14 w-14 object-contain" />
             <div>
-              <div className="text-[30px] font-bold tracking-wide text-[#222]">政采通政采服务云平台</div>
+              <div className="text-[30px] font-bold tracking-wide text-[#222]">全国政采云服务云平台</div>
               <div className="mt-1 text-[13px] uppercase tracking-[2px] text-[#555]">
-                Zheng Cai Tong Zheng Cai Fu Wu Yun Ping Tai
+                Quan Guo Zheng Cai Yun Fu Wu Yun Ping Tai
               </div>
             </div>
           </Link>
@@ -174,7 +174,7 @@ export default async function ArticlePage(props: PageProps<"/article/[id]">) {
       </main>
 
       <footer className="mt-6 border-t border-gray-300 py-6 text-center text-xs text-gray-500">
-        Copyright © 2026 政采通政采服务云平台 All Rights Reserved.
+        Copyright © 2026 全国政采云服务云平台 All Rights Reserved.
       </footer>
     </div>
   );

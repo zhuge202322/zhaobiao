@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "付费指导 - 招采云服政采服务云平台",
-  description: "招采云服政采服务云平台付费协议与服务说明",
+  title: "付费指导 - 全国政采云服务云平台",
+  description: "全国政采云服务云平台付费协议与服务说明",
 };
 
 const intro = [
@@ -74,13 +74,13 @@ export default function PaidGuidePage() {
       <header className="bg-[linear-gradient(180deg,#eef8ff_0%,#dff0ff_100%)]">
         <div className="mx-auto flex min-h-[116px] w-full max-w-[1200px] items-center justify-between px-4 py-6">
           <Link href="/" className="flex items-center gap-4">
-            <img src="/logo.png" alt="政采通" className="h-14 w-14 object-contain" />
+            <img src="/logo.png" alt="全国政采云服务云平台" className="h-14 w-14 object-contain" />
             <div>
               <div className="text-2xl font-bold tracking-wide text-[#222] md:text-[30px]">
-                招采云服政采服务云平台
+                全国政采云服务云平台
               </div>
               <div className="mt-1 text-[13px] uppercase tracking-[2px] text-[#555]">
-                Zheng Cai Tong Zheng Cai Fu Wu Yun Ping Tai
+                Quan Guo Zheng Cai Yun Fu Wu Yun Ping Tai
               </div>
             </div>
           </Link>
@@ -111,7 +111,7 @@ export default function PaidGuidePage() {
           </div>
           <div className="px-6 pb-6 pt-2 text-center">
             <h1 className="mx-auto max-w-[960px] text-xl font-bold leading-8 text-[#111] md:text-[24px]">
-              招采云服政采服务云平台付费协议
+              全国政采云服务云平台付费协议
             </h1>
             <div className="mt-4 text-sm text-gray-500">请在购买付费服务前仔细阅读并充分理解以下内容</div>
           </div>
@@ -144,7 +144,7 @@ export default function PaidGuidePage() {
       </main>
 
       <footer className="mt-6 border-t border-gray-300 bg-white py-6 text-center text-xs text-gray-500">
-        Copyright 2026 招采云服政采服务云平台 All Rights Reserved.
+        Copyright 2026 全国政采云服务云平台 All Rights Reserved.
       </footer>
     </div>
   );

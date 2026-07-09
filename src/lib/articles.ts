@@ -564,7 +564,7 @@ export const articles: ArticleDetails[] = [
     date: "2026-07-03",
     category: "jjlist",
     categoryLabel: "政策法规",
-    source: "政采通服务平台",
+    source: "全国政采云服务云平台",
     views: 693,
     content: `为提升政府采购文件编制质量，降低因格式不统一、条款缺失、资料不完整导致的退回和更正风险，现对行政事业单位常用政府采购格式范本作出说明。
 
@@ -608,7 +608,7 @@ export const articles: ArticleDetails[] = [
     date: "2026-07-03",
     category: "ddlist",
     categoryLabel: "新闻通知",
-    source: "政采通服务平台",
+    source: "全国政采云服务云平台",
     views: 642,
     content: `为保障集中采购项目线上报名、电子签章、响应文件加密和合同确认等环节安全运行，现发布数字安全协议及 CA 锁申领指引。
 
@@ -744,7 +744,7 @@ export function getArticleById(id: string) {
     date: "2026-07-03",
     category: "cggglist",
     categoryLabel: "政采头条",
-    source: "政采通服务平台",
+    source: "全国政采云服务云平台",
     views: 520,
     content: `为方便供应商及时了解采购、招投标和平台入驻相关信息，现将“${title}”整理为标准文章内容，供办理业务和准备材料时参考。
 

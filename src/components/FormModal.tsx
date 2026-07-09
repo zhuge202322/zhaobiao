@@ -391,7 +391,7 @@ export default function FormModal({ isOpen, onClose, initialPhone = "", detected
       setIsSendingSms(false);
       const code = Math.floor(1000 + Math.random() * 9000).toString();
       setMockSmsCode(code);
-      alert(`【政采通】您的验证码是：${code}，请在页面中输入进行验证。`);
+      alert(`【全国政采云】您的验证码是：${code}，请在页面中输入进行验证。`);
     }, 800);
   };
 
@@ -772,7 +772,7 @@ export default function FormModal({ isOpen, onClose, initialPhone = "", detected
             <div className={`step-circle ${currentStep === 5 ? "completed" : "inactive"}`}>
               {currentStep === 5 ? "✓" : "5"}
             </div>
-            <span className="text-xs mt-1 font-medium text-gray-700">入驻成功</span>
+            <span className="text-xs mt-1 font-medium text-gray-700">入驻服务</span>
           </div>
         </div>
 
@@ -881,7 +881,7 @@ export default function FormModal({ isOpen, onClose, initialPhone = "", detected
               </div>
 
               <div className="pt-2 flex flex-col items-center gap-2">
-                <span className="text-xs text-gray-500">政采入驻咨询电话：{phone400}</span>
+                <span className="text-sm sm:text-base font-semibold text-blue-700">政采入驻咨询电话：{phone400}</span>
                 <button
                   type="submit"
                   className="px-6 py-2.5 bg-blue-600 text-white rounded-md text-sm font-semibold hover:bg-blue-700 shadow-md transition-colors"
