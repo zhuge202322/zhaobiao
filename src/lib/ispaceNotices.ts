@@ -111,6 +111,285 @@ function fieldValue(fields: string[], label: string) {
   return item.replace(new RegExp(`^${label}[：:]\\s*`, "u"), "").trim();
 }
 
+type FallbackIspaceNoticeSeed = {
+  sourceId: string;
+  title: string;
+  date: string;
+  orgName?: string;
+  sourcePath?: string;
+  fields: string[];
+};
+
+const fallbackIspaceNoticeData: Record<IspaceNoticeType, FallbackIspaceNoticeSeed[]> = {
+  TENDER_ANNOUNCEMENT: [
+    {
+      sourceId: "C1100000189013176074",
+      title: "试验执行管控系统招标公告",
+      date: "2026-07-09",
+      orgName: "西安航天动力试验技术研究所",
+      sourcePath: "/exp/bidding/sell/signup/toZbggInfoHt.do?probid=C1100000189013176074",
+      fields: ["招标编号：C1100000189013176074", "招标行业：货物信息电子计算机系统软件", "开标时间：2026-07-30 09:00", "文件购买截止时间：2026-07-17 22:00"],
+    },
+    {
+      sourceId: "C1100000189017300001",
+      title: "基于高阶引力及复杂再入模型的XX仿真模块招标公告",
+      date: "2026-07-09",
+      orgName: "北京航天长征飞行器研究所",
+      sourcePath: "/exp/bidding/sell/signup/toZbggInfoHt.do?probid=C1100000189017300001",
+      fields: ["招标编号：C1100000189017300001", "招标行业：货物航空航天航空航天设备", "开标时间：2026-07-30 09:30", "文件购买截止时间：2026-07-16 18:00"],
+    },
+    {
+      sourceId: "C1100000189005265066",
+      title: "铜川XX建设项目二道沟土建工程施工招标公告",
+      date: "2026-07-09",
+      orgName: "西安航天动力试验技术研究所",
+      sourcePath: "/exp/bidding/sell/signup/toZbggInfoHt.do?probid=C1100000189005265066",
+      fields: ["招标编号：C1100000189005265066", "招标行业：工程房屋建筑建筑工程", "开标时间：2026-07-31 14:00", "文件购买截止时间：2026-07-17 00:00"],
+    },
+    {
+      sourceId: "C1100000189005265065",
+      title: "700-1201长程工艺系统安装工程招标公告",
+      date: "2026-07-09",
+      orgName: "西安航天动力试验技术研究所",
+      sourcePath: "/exp/bidding/sell/signup/toZbggInfoHt.do?probid=C1100000189005265065",
+      fields: ["招标编号：C1100000189005265065", "招标行业：工程房屋建筑建筑工程", "开标时间：2026-07-31 09:30", "文件购买截止时间：2026-07-17 00:00"],
+    },
+    {
+      sourceId: "C1100000189016290007",
+      title: "1231台工艺系统安装工程招标公告",
+      date: "2026-07-09",
+      orgName: "西安航天动力试验技术研究所",
+      sourcePath: "/exp/bidding/sell/signup/toZbggInfoHt.do?probid=C1100000189016290007",
+      fields: ["招标编号：C1100000189016290007", "招标行业：工程设备机械机电安装工程", "开标时间：2026-07-31 09:00", "文件购买截止时间：2026-07-17 00:00"],
+    },
+    {
+      sourceId: "C1100000189017296001",
+      title: "复合机设备招标公告",
+      date: "2026-07-09",
+      orgName: "北京卫星制造厂有限公司",
+      sourcePath: "/exp/bidding/sell/signup/toZbggInfoHt.do?probid=C1100000189017296001",
+      fields: ["招标编号：C1100000189017296001", "招标行业：货物信息电子电子元器件及专用设备", "开标时间：2026-07-30 09:30", "文件购买截止时间：2026-07-16 23:00"],
+    },
+    {
+      sourceId: "C1100000189017294001",
+      title: "超大长径比支撑杆结构直线度检测系统招标公告",
+      date: "2026-07-09",
+      orgName: "北京卫星制造厂有限公司",
+      sourcePath: "/exp/bidding/sell/signup/toZbggInfoHt.do?probid=C1100000189017294001",
+      fields: ["招标编号：C1100000189017294001", "招标行业：货物航空航天航空航天设备", "开标时间：2026-07-31 09:30", "文件购买截止时间：2026-07-16 23:00"],
+    },
+    {
+      sourceId: "C1100000189016808001",
+      title: "在轨运行模式与策略优化验证系统招标公告",
+      date: "2026-07-09",
+      orgName: "上海卫星工程研究所",
+      sourcePath: "/exp/bidding/sell/signup/toZbggInfoHt.do?probid=C1100000189016808001",
+      fields: ["招标编号：C1100000189016808001", "招标行业：货物航空航天航空航天设备", "开标时间：2026-07-30 09:30", "文件购买截止时间：2026-07-16 16:00"],
+    },
+    {
+      sourceId: "C1100000189017247001",
+      title: "伺服加载系统招标公告",
+      date: "2026-07-09",
+      orgName: "北京强度环境研究所",
+      sourcePath: "/exp/bidding/sell/signup/toZbggInfoHt.do?probid=C1100000189017247001",
+      fields: ["招标编号：C1100000189017247001", "招标行业：货物化学工业化工机械", "开标时间：2026-07-30 14:00", "文件购买截止时间：2026-07-16 17:00"],
+    },
+    {
+      sourceId: "C1100000189017181001",
+      title: "大口径网状反射面健康状态智能评估系统招标公告",
+      date: "2026-07-09",
+      orgName: "上海航天电子通讯设备研究所",
+      sourcePath: "/exp/bidding/sell/signup/toZbggInfoHt.do?probid=C1100000189017181001",
+      fields: ["招标编号：C1100000189017181001", "招标行业：货物航空航天航空航天设备", "开标时间：2026-07-30 13:30", "文件购买截止时间：2026-07-16 23:00"],
+    },
+  ],
+  CHANGE_ANNOUNCEMENT: [
+    {
+      sourceId: "C1100000189017183001",
+      title: "喷管试验翻转台变更公告",
+      date: "2026-07-09",
+      orgName: "西安航天动力技术研究所",
+      sourcePath: "/ggInfoHt.do?typ=1&back=0&pkid=7129",
+      fields: ["招标编号：C1100000189017183001", "招标行业：货物信息电子电子元器件及专用设备", "变更标段（包）：第1包：喷管试验翻转台"],
+    },
+    {
+      sourceId: "C1100000189017135001",
+      title: "2026年通用硬件设备、数据库维保及设备搬迁、布线服务变更公告",
+      date: "2026-07-09",
+      orgName: "中国资源卫星应用中心",
+      sourcePath: "/ggInfoHt.do?typ=1&back=0&pkid=7128",
+      fields: ["招标编号：C1100000189017135001", "招标行业：服务其他网络、电磁空间安全服务", "变更标段（包）：第1包：2026年通用硬件设备、数据库维保及设备搬迁、布线服务"],
+    },
+    {
+      sourceId: "C1100000189017129001",
+      title: "HY项目35kV输变电工程EPC总承包变更公告",
+      date: "2026-07-08",
+      orgName: "西安航天化学动力有限公司",
+      sourcePath: "/ggInfoHt.do?typ=1&back=0&pkid=7126",
+      fields: ["招标编号：C1100000189017129001", "招标行业：工程能源电力电力工程", "变更标段（包）：第1包：HY项目35kV输变电工程EPC总承包"],
+    },
+    {
+      sourceId: "C1100000189017123001",
+      title: "发动机使用维护保障系统变更公告",
+      date: "2026-07-08",
+      orgName: "西安航天动力研究所",
+      sourcePath: "/ggInfoHt.do?typ=1&back=0&pkid=7124",
+      fields: ["招标编号：C1100000189017123001", "招标行业：货物设备机械其他专用机械", "变更标段（包）：第1包：发动机使用维护保障系统"],
+    },
+    {
+      sourceId: "C1100000189017110001",
+      title: "空气气源系统改造（空压机组及附件）变更公告",
+      date: "2026-07-08",
+      orgName: "西安航天动力研究所",
+      sourcePath: "/ggInfoHt.do?typ=1&back=0&pkid=7123",
+      fields: ["招标编号：C1100000189017110001", "招标行业：货物设备机械其他专用机械", "变更标段（包）：第1包：空气气源系统改造（空压机组及附件）"],
+    },
+    {
+      sourceId: "C1100000189017111001",
+      title: "空气气源系统改造（空气气瓶）变更公告",
+      date: "2026-07-08",
+      orgName: "西安航天动力研究所",
+      sourcePath: "/ggInfoHt.do?typ=1&back=0&pkid=7122",
+      fields: ["招标编号：C1100000189017111001", "招标行业：货物化学工业化工机械", "变更标段（包）：第1包：空气气源系统改造（空气气瓶）"],
+    },
+    {
+      sourceId: "C1100000189017212001",
+      title: "表面废水处理站提标改造变更公告",
+      date: "2026-07-07",
+      orgName: "山西航天清华装备有限责任公司",
+      sourcePath: "/ggInfoHt.do?typ=1&back=0&pkid=7120",
+      fields: ["招标编号：C1100000189017212001", "招标行业：货物生态环保环保设备", "变更标段（包）：第1包：表面废水处理站提标改造"],
+    },
+    {
+      sourceId: "C1100000189017102001",
+      title: "重复使用发动机力学环境模拟与验证系统变更公告",
+      date: "2026-07-03",
+      orgName: "西安航天动力研究所",
+      sourcePath: "/ggInfoHt.do?typ=1&back=0&pkid=7114",
+      fields: ["招标编号：C1100000189017102001", "招标行业：货物其他其他货物", "变更标段（包）：第1包：重复使用发动机力学环境模拟与验证系统"],
+    },
+    {
+      sourceId: "C1100000189017109001",
+      title: "模型全生命周期管理平台运行支撑服务器采购变更公告",
+      date: "2026-07-03",
+      orgName: "上海宇航系统工程研究所",
+      sourcePath: "/ggInfoHt.do?typ=1&back=0&pkid=7108",
+      fields: ["招标编号：C1100000189017109001", "招标行业：货物其他计算机及网络设备", "变更标段（包）：第1包：模型全生命周期管理平台运行支撑服务器采购"],
+    },
+    {
+      sourceId: "C1100000189013176072",
+      title: "阀门变更公告",
+      date: "2026-07-01",
+      orgName: "西安航天动力试验技术研究所",
+      sourcePath: "/ggInfoHt.do?typ=1&back=0&pkid=7104",
+      fields: ["招标编号：C1100000189013176072", "招标行业：货物设备机械其他专用机械", "变更标段（包）：第1包：42MPa及以上阀门、第2包：35MPa及以下阀门"],
+    },
+  ],
+  WIN_RESULT_ANNOUNCEMENT: [
+    {
+      sourceId: "C1100000189017009001",
+      title: "401厂房电力增容改造项目中标结果公告",
+      date: "2026-07-09",
+      sourcePath: "/ggInfoHt.do?typ=3&packid=C1100000189017009001001",
+      fields: ["招标编号：C1100000189017009001", "招标行业：货物能源电力输变电设备、设施", "中标方：上海彬长电气科技集团有限公司", "中标金额：4788200.34元"],
+    },
+    {
+      sourceId: "C1100000189016997001",
+      title: "设计工艺管理系统中标结果公告",
+      date: "2026-07-09",
+      sourcePath: "/ggInfoHt.do?typ=3&packid=C1100000189016997001001",
+      fields: ["招标编号：C1100000189016997001", "招标行业：货物信息电子计算机系统软件", "中标方：航天四创科技有限责任公司", "中标金额：3380000.00元"],
+    },
+    {
+      sourceId: "C1100000189017089001",
+      title: "粘合剂连续后处理系统中标结果公告",
+      date: "2026-07-09",
+      sourcePath: "/ggInfoHt.do?typ=3&packid=C1100000189017089001001",
+      fields: ["招标编号：C1100000189017089001", "招标行业：货物信息电子电子元器件及专用设备", "中标方：中建安装集团有限公司", "中标金额：9894362.00元"],
+    },
+    {
+      sourceId: "C1100000189017081001",
+      title: "甲苯采购中标结果公告",
+      date: "2026-07-09",
+      sourcePath: "/ggInfoHt.do?typ=3&packid=C1100000189017081001001",
+      fields: ["招标编号：C1100000189017081001", "招标行业：货物其他石油专用化工产品", "中标方：襄阳伟创化玻有限公司", "中标金额：5730400.00元"],
+    },
+    {
+      sourceId: "C1100000189016160004-002",
+      title: "2026年工艺及测控系统维护（二标段）中标结果公告",
+      date: "2026-07-09",
+      sourcePath: "/ggInfoHt.do?typ=3&packid=C1100000189016160004002",
+      fields: ["招标编号：C1100000189016160004", "招标行业：工程房屋建筑建筑工程", "中标方：四川荣志盛和建设工程有限公司", "中标金额：291899.50元"],
+    },
+    {
+      sourceId: "C1100000189016160004-001",
+      title: "2026年工艺及测控系统维护（一标段）中标结果公告",
+      date: "2026-07-09",
+      sourcePath: "/ggInfoHt.do?typ=3&packid=C1100000189016160004001",
+      fields: ["招标编号：C1100000189016160004", "招标行业：工程房屋建筑建筑工程", "中标方：陕西航天机电环境工程设计院有限责任公司", "中标金额：241217.00元"],
+    },
+    {
+      sourceId: "C1100000189016686001",
+      title: "上海无线电设备研究所班车租赁服务中标结果公告",
+      date: "2026-07-08",
+      sourcePath: "/ggInfoHt.do?typ=3&packid=C1100000189016686001001",
+      fields: ["招标编号：C1100000189016686001", "招标行业：服务商业服务汽车租赁", "中标方：上海露虹汽车服务有限公司", "中标金额：1548800.00元"],
+    },
+    {
+      sourceId: "C1100000189017048001",
+      title: "数控车削中心中标结果公告",
+      date: "2026-07-08",
+      sourcePath: "/ggInfoHt.do?typ=3&packid=C1100000189017048001001",
+      fields: ["招标编号：C1100000189017048001", "招标行业：货物设备机械金属加工机械", "中标方：南京德福克智能科技有限公司", "中标金额：2149000.00元"],
+    },
+    {
+      sourceId: "C1100000189017026001",
+      title: "航天城科研区部分破损及积水路面第一期维修中标结果公告",
+      date: "2026-07-08",
+      sourcePath: "/ggInfoHt.do?typ=3&packid=C1100000189017026001001",
+      fields: ["招标编号：C1100000189017026001", "招标行业：工程市政市政工程", "中标方：创甲建设有限公司", "中标金额：2934032.40元"],
+    },
+    {
+      sourceId: "C1100000189016848001",
+      title: "航天城男生宿舍及女生宿舍维修改造中标结果公告",
+      date: "2026-07-08",
+      sourcePath: "/ggInfoHt.do?typ=3&packid=C1100000189016848001001",
+      fields: ["招标编号：C1100000189016848001", "招标行业：工程房屋建筑建筑工程", "中标方：北京合元盛建设工程有限公司", "中标金额：1265006.16元"],
+    },
+  ],
+};
+
+function createFallbackIspaceNotice(type: IspaceNoticeType, seed: FallbackIspaceNoticeSeed): IspaceNoticeItem {
+  const fields = seed.fields.filter(Boolean);
+
+  return {
+    id: `${type}:${seed.sourceId}`,
+    sourceId: seed.sourceId,
+    title: seed.title,
+    date: seed.date,
+    type,
+    typeLabel: labelForType(type),
+    orgName: seed.orgName,
+    projectCode: fieldValue(fields, "招标编号"),
+    industry: fieldValue(fields, "招标行业"),
+    openTime: fieldValue(fields, "开标时间"),
+    deadline: fieldValue(fields, "文件购买截止时间"),
+    winner: fieldValue(fields, "中标方"),
+    amount: fieldValue(fields, "中标金额"),
+    sourceUrl: absoluteSourceUrl(seed.sourcePath),
+    fields,
+  };
+}
+
+const fallbackIspaceNoticeGroups = ispaceNoticeTabs.reduce((map, tab) => {
+  map[tab.type] = fallbackIspaceNoticeData[tab.type].map((seed) => createFallbackIspaceNotice(tab.type, seed));
+  return map;
+}, {} as IspaceNoticeGroupMap);
+
+function fallbackIspaceNoticesByType(type: IspaceNoticeType, pageSize: number) {
+  return (fallbackIspaceNoticeGroups[type] ?? []).slice(0, pageSize);
+}
+
 function parseNoticeBlock(block: string, type: IspaceNoticeType): IspaceNoticeItem | null {
   const title = cleanTitle(block.match(/<h2>([\s\S]*?)<\/h2>/u)?.[1] ?? "");
   const sourceId = attr(block, "probid");
@@ -148,17 +427,27 @@ function parseNoticeBlock(block: string, type: IspaceNoticeType): IspaceNoticeIt
 }
 
 async function fetchIspaceHtml(type: IspaceNoticeType) {
-  const response = await fetch(`${ispaceBaseUrl}/retrieve.do?typflag=${typflagForType(type)}`, {
-    cache: "no-store",
-    headers: {
-      Accept: "text/html,application/xhtml+xml",
-      "User-Agent": "Mozilla/5.0 zhaobiao-ispace-fetcher",
-      Referer: `${ispaceBaseUrl}/retrieve.do`,
-    },
-  });
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 8000);
 
-  if (!response.ok) return "";
-  return response.text();
+  try {
+    const response = await fetch(`${ispaceBaseUrl}/retrieve.do?typflag=${typflagForType(type)}`, {
+      cache: "no-store",
+      signal: controller.signal,
+      headers: {
+        Accept: "text/html,application/xhtml+xml",
+        "User-Agent": "Mozilla/5.0 zhaobiao-ispace-fetcher",
+        Referer: `${ispaceBaseUrl}/retrieve.do`,
+      },
+    });
+
+    if (!response.ok) return "";
+    return response.text();
+  } catch {
+    return "";
+  } finally {
+    clearTimeout(timeoutId);
+  }
 }
 
 export async function fetchIspaceNoticesByType(type: IspaceNoticeType, pageSize = 10) {
@@ -169,10 +458,12 @@ export async function fetchIspaceNoticesByType(type: IspaceNoticeType, pageSize 
     .slice(1)
     .map((section) => `${marker}${section.split("<!-- 分页器 -->")[0]}`);
 
-  return blocks
+  const items = blocks
     .map((block) => parseNoticeBlock(block, type))
     .filter((item): item is IspaceNoticeItem => Boolean(item))
     .slice(0, pageSize);
+
+  return items.length ? items : fallbackIspaceNoticesByType(type, pageSize);
 }
 
 export async function fetchIspaceNoticeGroups(pageSize = 10): Promise<IspaceNoticeGroupMap> {
