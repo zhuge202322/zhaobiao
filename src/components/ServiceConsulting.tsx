@@ -71,7 +71,7 @@ const ServiceConsulting = ({ onOpenForm }: ServiceConsultingProps) => {
           </div>
         </div>
 
-        <div className="bg-[#1871D7] overflow-hidden relative px-6 py-8 md:px-10 md:py-10 text-center rounded">
+        <div className="hidden md:block bg-[#1871D7] overflow-hidden relative px-6 py-8 md:px-10 md:py-10 text-center rounded">
           <div className="absolute inset-0 opacity-40 mix-blend-color-dodge">
             <svg width="100%" height="100%" preserveAspectRatio="none">
               <path d="M0,50 Q100,0 200,50 T400,50 T600,50 T800,50 T1000,50 T1200,50 L1200,100 L0,100 Z" fill="#fbbf24" opacity="0.3" />

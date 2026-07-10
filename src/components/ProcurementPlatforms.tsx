@@ -71,7 +71,15 @@ const enterprisePlatforms: PlatformImage[] = [
   { alt: "国家信息中心", src: "/platforms/enterprise/guojia-xinxi.png" },
 ];
 
-function PlatformImageCard({ item, onOpenForm }: { item: PlatformImage; onOpenForm?: () => void }) {
+function PlatformImageCard({
+  item,
+  onOpenForm,
+  fit = "cover",
+}: {
+  item: PlatformImage;
+  onOpenForm?: () => void;
+  fit?: "cover" | "contain";
+}) {
   return (
     <button
       type="button"
@@ -79,7 +87,11 @@ function PlatformImageCard({ item, onOpenForm }: { item: PlatformImage; onOpenFo
       className="platform-image-card h-[90px] md:h-[96px] lg:h-[76px] overflow-hidden rounded-lg bg-white shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md border border-white hover:border-blue-100 cursor-pointer snap-start"
       aria-label={`${item.alt}登记咨询`}
     >
-      <img src={item.src} alt={item.alt} className="h-full w-full object-cover" />
+      <img
+        src={item.src}
+        alt={item.alt}
+        className={`h-full w-full ${fit === "contain" ? "object-contain" : "object-cover"}`}
+      />
     </button>
   );
 }
@@ -174,7 +186,7 @@ export default function ProcurementPlatforms({ onOpenForm }: ProcurementPlatform
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
             {enterprisePlatforms.map((item) => (
-              <PlatformImageCard key={item.src} item={item} onOpenForm={onOpenForm} />
+              <PlatformImageCard key={item.src} item={item} onOpenForm={onOpenForm} fit="contain" />
             ))}
           </div>
         </div>
