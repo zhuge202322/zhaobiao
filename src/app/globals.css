@@ -2629,15 +2629,6 @@ html, body {
     display: block;
   }
 
-  .mobile-action-phone {
-    color: #115eb3;
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    font-size: 12px;
-    font-weight: 800;
-    line-height: 23px;
-    font-variant-numeric: tabular-nums;
-  }
-
   .float-window-content p {
     font-size: 11px !important;
     line-height: 1.65 !important;
