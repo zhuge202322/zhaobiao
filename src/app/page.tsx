@@ -1698,12 +1698,14 @@ export default function Home() {
       )}
 
       <nav className="mobile-action-bar" aria-label="手机端入驻快捷菜单">
-        <button type="button" className="mobile-action-item" onClick={() => triggerRegistration()}>
-          <span className="mobile-action-icon" aria-hidden="true">
-            <HotServiceIcon type="orbit" />
-          </span>
+        <a
+          href="tel:4009998839"
+          className="mobile-action-item"
+          aria-label="拨打入驻电话 400-999-8839"
+        >
+          <span className="mobile-action-phone">400-999-8839</span>
           <span>入驻电话</span>
-        </button>
+        </a>
         <button type="button" className="mobile-action-item" onClick={() => triggerRegistration()}>
           <span className="mobile-action-icon" aria-hidden="true">
             <HotServiceIcon type="shield" />
