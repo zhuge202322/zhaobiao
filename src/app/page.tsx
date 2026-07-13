@@ -49,6 +49,17 @@ type EntryPromptTarget = {
   detailUrl: string;
 };
 
+const getTodayDisplayDate = () => {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "Asia/Shanghai",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(new Date());
+  const month = parts.find((part) => part.type === "month")?.value ?? "01";
+  const day = parts.find((part) => part.type === "day")?.value ?? "01";
+  return `${month}-${day}`;
+};
+
 type MemberRecord = Record<string, {
   companyName?: string;
   contactName?: string;
@@ -341,6 +352,7 @@ const floatingMenuItems: Array<{ label: string; icon: HotServiceIconType }> = [
 ];
 
 export default function Home() {
+  const todayDisplayDate = getTodayDisplayDate();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [activePhone, setActivePhone] = useState("");
   const [detectedProvince, setDetectedProvince] = useState("北京");
@@ -748,7 +760,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col font-sans select-none text-slate-800">
+    <div className="home-page-shell min-h-screen bg-slate-50 flex flex-col font-sans select-none text-slate-800">
       
       {/* Top status bar */}
       <div className="w-full bg-[#f8fafc] border-b border-gray-200 py-2 text-xs">
@@ -1043,7 +1055,7 @@ export default function Home() {
               >
                 <div className="top-marketplace-banner-copy">
                   <span>全国政采云服务云平台</span>
-                  <small>zcytwgov.com</small>
+                  <small>zcyfwgov.com</small>
                   <strong>政采供应商火热入驻中</strong>
                   <div>
                     <b>服务采购单位：</b>
@@ -1352,7 +1364,7 @@ export default function Home() {
                                 {item.title}
                               </div>
                               <span className="shrink-0 text-[10px] sm:text-xs text-gray-400 tabular-nums">
-                                {item.date.slice(5)}
+                                {todayDisplayDate}
                               </span>
                             </div>
                           </button>
@@ -1388,7 +1400,7 @@ export default function Home() {
                                 {item.title}
                               </div>
                               <span className="shrink-0 text-[10px] sm:text-xs text-gray-400 tabular-nums">
-                                {item.date.slice(5)}
+                                {todayDisplayDate}
                               </span>
                             </div>
                           </button>
@@ -1424,7 +1436,7 @@ export default function Home() {
                                 {item.title}
                               </div>
                               <span className="shrink-0 text-[10px] sm:text-xs text-gray-400 tabular-nums">
-                                {item.date.slice(5)}
+                                {todayDisplayDate}
                               </span>
                             </div>
                           </button>
@@ -1460,7 +1472,7 @@ export default function Home() {
                                 {item.title}
                               </div>
                               <span className="shrink-0 text-[10px] sm:text-xs text-gray-400 tabular-nums">
-                                {item.date.slice(5)}
+                                {todayDisplayDate}
                               </span>
                             </div>
                           </button>
@@ -1684,6 +1696,27 @@ export default function Home() {
           </nav>
         </>
       )}
+
+      <nav className="mobile-action-bar" aria-label="手机端入驻快捷菜单">
+        <button type="button" className="mobile-action-item" onClick={() => triggerRegistration()}>
+          <span className="mobile-action-icon" aria-hidden="true">
+            <HotServiceIcon type="orbit" />
+          </span>
+          <span>入驻电话</span>
+        </button>
+        <button type="button" className="mobile-action-item" onClick={() => triggerRegistration()}>
+          <span className="mobile-action-icon" aria-hidden="true">
+            <HotServiceIcon type="shield" />
+          </span>
+          <span>会员登录</span>
+        </button>
+        <button type="button" className="mobile-action-item" onClick={() => triggerRegistration()}>
+          <span className="mobile-action-icon" aria-hidden="true">
+            <HotServiceIcon type="entry" />
+          </span>
+          <span>入驻报名</span>
+        </button>
+      </nav>
 
       {/* Login Progress Query Modal Dialog */}
       {showProgressQuery && (
