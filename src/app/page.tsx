@@ -1703,6 +1703,9 @@ export default function Home() {
           className="mobile-action-item"
           aria-label="拨打入驻电话 400-999-8839"
         >
+          <span className="mobile-action-icon" aria-hidden="true">
+            <HotServiceIcon type="orbit" />
+          </span>
           <span>入驻电话</span>
         </a>
         <button type="button" className="mobile-action-item" onClick={() => triggerRegistration()}>
